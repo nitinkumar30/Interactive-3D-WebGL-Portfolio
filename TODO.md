@@ -26,12 +26,12 @@
 ## 🟠 Priorytet 2 — Kluczowe ulepszenia (wizualne i UX)
 
 ### 3. Dopracować tekstury i Awards w About
-- [ ] Sprawdzić czytelność istniejących tekstur (SOTY, SOTD, SOTM, FEATURED) — czy nie są za małe/za duże
-- [ ] Poprawić pozycje i rozmiary kart Awards w `AwardsMilestone`
-- [ ] Dodać animację "View" — kliknięcie na kategorię nagród → wyświetlenie wszystkich nagród w danej kategorii
-  - [ ] Zaprojektować UI — popup/overlay na canvas lub HTML overlay
-  - [ ] Dodać interakcję kliknięcia na kartę Award
-  - [ ] Animować rozwinięcie listy (GSAP)
+- [X] Sprawdzić czytelność istniejących tekstur (SOTY, SOTD, SOTM, FEATURED) — czy nie są za małe/za duże
+- [X] Poprawić pozycje i rozmiary kart Awards w `AwardsMilestone`
+- [X] Dodać animację "View" — kliknięcie na kategorię nagród → wyświetlenie wszystkich nagród w danej kategorii
+  - [X] Zaprojektować UI — popup/overlay na canvas lub HTML overlay
+  - [X] Dodać interakcję kliknięcia na kartę Award
+  - [X] Animować rozwinięcie listy (GSAP)
 - **Pliki:** [InfiniteSkyManager.jsx](file:///c:/Users/tomsz/Desktop/portfolio/portfolio-itom/src/components/canvas/rooms/About/InfiniteSkyManager.jsx)
 
 ### 4. Dodać dekoracje do Corridor (jest pusty!)

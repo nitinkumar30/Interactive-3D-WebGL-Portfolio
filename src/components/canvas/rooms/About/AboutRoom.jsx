@@ -21,7 +21,13 @@ const STORY_MILESTONES = [
 
 const AboutRoom = ({ showRoom, onReady, isExiting }) => {
     const { camera } = useThree();
-    const { isTeleporting } = useScene();
+    const { isTeleporting, overlayContent } = useScene();
+
+    // Use ref to track overlay state for event listeners (avoids stale closures)
+    const overlayRef = useRef(overlayContent);
+    useEffect(() => {
+        overlayRef.current = overlayContent;
+    }, [overlayContent]);
 
     // Track if we've signaled ready
     const hasSignaledReady = useRef(false);
@@ -122,6 +128,7 @@ const AboutRoom = ({ showRoom, onReady, isExiting }) => {
     // Handle scroll wheel (desktop)
     useEffect(() => {
         const handleWheel = (e) => {
+            if (overlayRef.current) return; // BLOCK SCROLL IF OVERLAY IS OPEN
             scrollVelocity.current += e.deltaY * 0.002;
         };
 
@@ -139,6 +146,7 @@ const AboutRoom = ({ showRoom, onReady, isExiting }) => {
         };
 
         const handleTouchMove = (e) => {
+            if (overlayRef.current) return; // BLOCK SCROLL IF OVERLAY IS OPEN
             if (e.touches.length === 1) {
                 const deltaY = lastTouchY.current - e.touches[0].clientY;
                 lastTouchY.current = e.touches[0].clientY;
@@ -163,7 +171,7 @@ const AboutRoom = ({ showRoom, onReady, isExiting }) => {
         <group position={[0, 0, -25]}>
             {/* === PAPER AIRPLANE (follows camera maneuvers) === */}
             <PaperAirplane
-                position={[0, -0.3, -1]}
+                position={[0, -0.3, 1]}
                 rotation={[airplanePitch, 0, airplaneBank]}
                 scale={0.8}
                 color="#faf8f5"

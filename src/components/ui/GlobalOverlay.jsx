@@ -105,7 +105,10 @@ const ContentCard = ({ content, isOpen, onClose, isMobile }) => {
     });
 
     // --- KONFIGURACJA MASKI (SPOTLIGHT - CZARNA DZIURA) ---
-    const maskStyle = isMobile ? {
+    const maskStyle = (content.layout === 'certificate_grid') ? {
+        maskImage: 'none',
+        WebkitMaskImage: 'none'
+    } : isMobile ? {
         // Mobile: Monitor jest na górze (50% szerokości, 25% wysokości od góry)
         maskImage: 'radial-gradient(circle at 50% 25%, transparent 0%, transparent 15%, black 40%)',
         WebkitMaskImage: 'radial-gradient(circle at 50% 25%, transparent 0%, transparent 15%, black 40%)'
@@ -173,7 +176,18 @@ const ContentCard = ({ content, isOpen, onClose, isMobile }) => {
                         overflowY: 'auto',
                         fontFamily: "'Courier New', Courier, monospace", // Typewriter vibe
                         pointerEvents: 'auto', // Re-enable clicks for the card
-                        ...cardStyle
+                        ...cardStyle,
+                        // Override styles for grid layout to be centered and wider
+                        ...(content.layout === 'certificate_grid' ? {
+                            width: 'clamp(300px, 90vw, 1200px)',
+                            height: 'clamp(500px, 85vh, 900px)',
+                            maxHeight: '85vh',
+                            left: '50%',
+                            top: '50%',
+                            right: 'auto',
+                            bottom: 'auto',
+                            transform: isOpen ? 'translate(-50%, -50%)' : 'translate(-50%, 100%)',
+                        } : {})
                     }}
                     onClick={(e) => e.stopPropagation()} // Prevent closing when clicking card
                 >
@@ -195,6 +209,7 @@ const ContentCard = ({ content, isOpen, onClose, isMobile }) => {
                         display: 'flex',
                         justifyContent: 'space-between',
                         alignItems: 'flex-start',
+                        marginBottom: '1rem',
                         ...getStaggerStyle(100)
                     }}>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
@@ -243,63 +258,127 @@ const ContentCard = ({ content, isOpen, onClose, isMobile }) => {
                         </button>
                     </div>
 
-                    {/* Meta Info */}
-                    <div style={{
-                        display: 'flex',
-                        flexWrap: 'wrap',
-                        gap: '1rem',
-                        fontSize: '0.8rem',
-                        color: '#666',
-                        borderBottom: '1px dashed #ccc',
-                        paddingBottom: '1rem',
-                        ...getStaggerStyle(200)
-                    }}>
-                        <strong>{content.date}</strong>
-                        {content.views && <span>{content.views} views</span>}
-                    </div>
+                    {/* === LAYOUT: CERTIFICATE GRID === */}
+                    {content.layout === 'certificate_grid' ? (
+                        <div style={{
+                            display: 'grid',
+                            gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+                            gap: '2rem',
+                            padding: '1rem 0',
+                            ...getStaggerStyle(200)
+                        }}>
+                            {content.items?.map((item, index) => (
+                                <div key={index} style={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: '0.8rem',
+                                    backgroundColor: '#fff',
+                                    padding: '1rem',
+                                    borderRadius: '2px',
+                                    boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+                                    transition: 'transform 0.2s',
+                                    cursor: 'pointer'
+                                }}
+                                    onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
+                                    onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                                    onClick={() => window.open(item.url || content.url || '#', '_blank')}
+                                >
+                                    {/* Image Wrapper (Aspect Ratio) */}
+                                    <div style={{
+                                        position: 'relative',
+                                        width: '100%',
+                                        paddingBottom: '70%', // ~ISO A4 Landscape ratio
+                                        backgroundColor: '#eee',
+                                        overflow: 'hidden'
+                                    }}>
+                                        <img
+                                            src={item.image}
+                                            alt={item.label}
+                                            style={{
+                                                position: 'absolute',
+                                                top: 0,
+                                                left: 0,
+                                                width: '100%',
+                                                height: '100%',
+                                                objectFit: 'cover'
+                                            }}
+                                        />
+                                    </div>
 
-                    {/* Description */}
-                    <p style={{
-                        lineHeight: 1.6,
-                        color: '#333',
-                        fontSize: '0.95rem',
-                        margin: 0,
-                        ...getStaggerStyle(300)
-                    }}>
-                        {content.description}
-                    </p>
+                                    {/* Caption */}
+                                    <div style={{ textAlign: 'center' }}>
+                                        <h4 style={{ margin: '0 0 0.3rem 0', fontSize: '1rem', fontWeight: 700 }}>
+                                            {item.label}
+                                        </h4>
+                                        <span style={{ fontSize: '0.8rem', color: '#666', fontFamily: "monospace" }}>
+                                            {item.date}
+                                        </span>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        /* === LAYOUT: DEFAULT (The Studio Style) === */
+                        <>
+                            {/* Meta Info */}
+                            <div style={{
+                                display: 'flex',
+                                flexWrap: 'wrap',
+                                gap: '1rem',
+                                fontSize: '0.8rem',
+                                color: '#666',
+                                borderBottom: '1px dashed #ccc',
+                                paddingBottom: '1rem',
+                                ...getStaggerStyle(200)
+                            }}>
+                                <strong>{content.date}</strong>
+                                {content.views && <span>{content.views} views</span>}
+                            </div>
 
-                    {/* Action Button */}
-                    <div style={{
-                        marginTop: 'auto',
-                        paddingTop: '1rem',
-                        ...getStaggerStyle(400)
-                    }}>
-                        <a
-                            href={content.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            style={{
-                                display: 'block',
-                                width: '100%',
-                                padding: '1rem',
-                                backgroundColor: '#1a1a1a', // Black ink
-                                color: '#fff',
-                                textAlign: 'center',
-                                textDecoration: 'none',
-                                borderRadius: '2px', // Slight round
-                                fontWeight: 700,
-                                textTransform: 'uppercase',
-                                letterSpacing: '1px',
-                                fontSize: '0.9rem',
-                                transition: 'opacity 0.2s',
-                            }}
-                            onMouseOver={(e) => e.target.style.opacity = 0.8}
-                            onMouseOut={(e) => e.target.style.opacity = 1}
-                        >
-                            Open Link ↗
-                        </a>
-                    </div>
+                            {/* Description */}
+                            <p style={{
+                                lineHeight: 1.6,
+                                color: '#333',
+                                fontSize: '0.95rem',
+                                margin: 0,
+                                ...getStaggerStyle(300)
+                            }}>
+                                {content.description}
+                            </p>
+
+                            {/* Action Button */}
+                            <div style={{
+                                marginTop: 'auto',
+                                paddingTop: '1rem',
+                                ...getStaggerStyle(400)
+                            }}>
+                                <a
+                                    href={content.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    style={{
+                                        display: 'block',
+                                        width: '100%',
+                                        padding: '1rem',
+                                        backgroundColor: '#1a1a1a', // Black ink
+                                        color: '#fff',
+                                        textAlign: 'center',
+                                        textDecoration: 'none',
+                                        borderRadius: '2px', // Slight round
+                                        fontWeight: 700,
+                                        textTransform: 'uppercase',
+                                        letterSpacing: '1px',
+                                        fontSize: '0.9rem',
+                                        transition: 'opacity 0.2s',
+                                    }}
+                                    onMouseOver={(e) => e.target.style.opacity = 0.8}
+                                    onMouseOut={(e) => e.target.style.opacity = 1}
+                                >
+                                    Open Link ↗
+                                </a>
+                            </div>
+                        </>
+                    )}
                 </div>
             </div>
         </div>

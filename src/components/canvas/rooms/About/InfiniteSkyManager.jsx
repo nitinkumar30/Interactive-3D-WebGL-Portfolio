@@ -3,6 +3,7 @@ import { useFrame, useLoader, useThree } from '@react-three/fiber';
 import { Text } from '@react-three/drei';
 import * as THREE from 'three';
 import SkyChunk, { CHUNK_LENGTH, ROOM_Z } from './SkyChunk';
+import { useScene } from '../../../../context/SceneContext';
 
 /**
  * InfiniteSkyManager Component
@@ -11,6 +12,61 @@ import SkyChunk, { CHUNK_LENGTH, ROOM_Z } from './SkyChunk';
  * World group moves with scroll, chunks stay at fixed positions relative to group.
  * Includes Story Milestones that loop with the content!
  */
+
+/**
+ * Reusable Button Component with Hover Effect
+ */
+const AwardButton = ({ onClick, texture, width, height, position }) => {
+    const meshRef = useRef();
+    const [hovered, setHovered] = useState(false);
+
+    useFrame((state, delta) => {
+        if (meshRef.current) {
+            // Smoothly lerp scale based on hover state
+            const targetScale = hovered ? 1.05 : 1.0;
+            const lerpFactor = 10 * delta; // Adjust speed here
+
+            meshRef.current.scale.x = THREE.MathUtils.lerp(meshRef.current.scale.x, targetScale, lerpFactor);
+            meshRef.current.scale.y = THREE.MathUtils.lerp(meshRef.current.scale.y, targetScale, lerpFactor);
+            meshRef.current.scale.z = THREE.MathUtils.lerp(meshRef.current.scale.z, targetScale, lerpFactor);
+        }
+    });
+
+    return (
+        <mesh
+            ref={meshRef}
+            position={position}
+            onClick={onClick}
+            onPointerOver={() => {
+                setHovered(true);
+                document.body.style.cursor = 'pointer';
+            }}
+            onPointerOut={() => {
+                setHovered(false);
+                document.body.style.cursor = 'auto';
+            }}
+        >
+            <planeGeometry args={[width, height]} />
+            <meshBasicMaterial
+                map={texture}
+                transparent
+                side={THREE.DoubleSide}
+                alphaTest={0.1}
+                depthWrite={false}
+            />
+            <Text
+                position={[0, 0, 0.05]}
+                fontSize={0.25}
+                color="#1a1a1a"
+                anchorX="center"
+                anchorY="middle"
+                font="/fonts/CabinSketch-Bold.ttf"
+            >
+                VIEW
+            </Text>
+        </mesh>
+    );
+};
 
 // Story milestones configuration
 // Each milestone appears once per "story cycle" (4 chunks = 160 units)
@@ -275,11 +331,81 @@ const IntroMilestone = ({ z, scrollProgress }) => {
 };
 
 /**
- * AWARDS Milestone - Cards reveal from behind main card
- * Rendering order matters: last rendered = on top
+ * MOCK DATA FOR AWARDS
+ */
+const AWARDS_DATA = {
+    featured: {
+        id: 'award-featured',
+        layout: 'certificate_grid',
+        title: 'Featured Projects Collection',
+        items: [
+            { label: 'Featured - Awwwards', date: 'May 2025', image: '/textures/about/FEATURED.webp', url: 'https://awwwards.com' },
+            { label: 'Featured - CSS Design Awards', date: 'June 2025', image: '/textures/about/FEATURED.webp', url: 'https://cssdesignawards.com' },
+            { label: 'Featured - The FWA', date: 'July 2025', image: '/textures/about/FEATURED.webp', url: 'https://thefwa.com' },
+            { label: 'Featured - Behance', date: 'August 2025', image: '/textures/about/FEATURED.webp', url: 'https://behance.net' },
+        ],
+        platformConfig: {
+            label: 'HONOR',
+            color: '#1a1a1a',
+            icon: '⭐'
+        }
+    },
+    sotd: {
+        id: 'award-sotd',
+        layout: 'certificate_grid',
+        title: 'Site of the Day Awards',
+        items: [
+            { label: 'SOTD - Awwwards', date: 'March 15, 2025', image: '/textures/about/SOTD.webp', url: 'https://awwwards.com' },
+            { label: 'SOTD - CSS Design Awards', date: 'April 02, 2025', image: '/textures/about/SOTD.webp', url: 'https://cssdesignawards.com' },
+            { label: 'SOTD - The FWA', date: 'May 10, 2025', image: '/textures/about/SOTD.webp', url: 'https://thefwa.com' },
+            { label: 'SOTD - Opetron', date: 'June 22, 2025', image: '/textures/about/SOTD.webp', url: 'https://opetron.com' },
+            { label: 'SOTD - CSS Winner', date: 'July 14, 2025', image: '/textures/about/SOTD.webp', url: 'https://csswinner.com' },
+        ],
+        platformConfig: {
+            label: 'AWARD',
+            color: '#1a1a1a',
+            icon: '🏆'
+        }
+    },
+    sotm: {
+        id: 'award-sotm',
+        layout: 'certificate_grid',
+        title: 'Site of the Month Awards',
+        items: [
+            { label: 'SOTM - Awwwards', date: 'April 2025', image: '/textures/about/SOTM.webp', url: 'https://awwwards.com' },
+            { label: 'SOTM - CSS Design Awards', date: 'May 2025', image: '/textures/about/SOTM.webp', url: 'https://cssdesignawards.com' },
+            { label: 'SOTM - The FWA', date: 'June 2025', image: '/textures/about/SOTM.webp', url: 'https://thefwa.com' },
+        ],
+        platformConfig: {
+            label: 'AWARD',
+            color: '#1a1a1a',
+            icon: '📅'
+        }
+    },
+    soty: {
+        id: 'award-soty',
+        layout: 'certificate_grid',
+        title: 'Site of the Year Awards',
+        items: [
+            { label: 'SOTY - Awwwards', date: '2025', image: '/textures/about/SOTY.webp', url: 'https://awwwards.com' },
+            { label: 'SOTY - CSS Design Awards', date: '2025', image: '/textures/about/SOTY.webp', url: 'https://cssdesignawards.com' },
+            { label: 'SOTY - The FWA', date: '2025', image: '/textures/about/SOTY.webp', url: 'https://thefwa.com' },
+        ],
+        platformConfig: {
+            label: 'PRESTIGE',
+            color: '#1a1a1a',
+            icon: '👑'
+        }
+    }
+};
+
+/**
+ * AWARDS Milestone - Floating Cards
+ * SOTY (center), SOTD, SOTM, Featured (behind)
  */
 const AwardsMilestone = ({ z, scrollProgress }) => {
     const { camera } = useThree();
+    const { openOverlay } = useScene();
     const groupRef = useRef();
     const sotyRef = useRef();
     const sotdRef = useRef();
@@ -291,21 +417,29 @@ const AwardsMilestone = ({ z, scrollProgress }) => {
     const sotdTexture = useLoader(THREE.TextureLoader, '/textures/about/SOTD.webp');
     const sotmTexture = useLoader(THREE.TextureLoader, '/textures/about/SOTM.webp');
     const featuredTexture = useLoader(THREE.TextureLoader, '/textures/about/FEATURED.webp');
+    const buttonTexture = useLoader(THREE.TextureLoader, '/textures/about/button.webp');
 
     // Color space fix
     sotyTexture.colorSpace = THREE.SRGBColorSpace;
     sotdTexture.colorSpace = THREE.SRGBColorSpace;
     sotmTexture.colorSpace = THREE.SRGBColorSpace;
     featuredTexture.colorSpace = THREE.SRGBColorSpace;
+    buttonTexture.colorSpace = THREE.SRGBColorSpace;
 
     // Calculate aspect ratios
     const sotyAspect = sotyTexture.image ? sotyTexture.image.width / sotyTexture.image.height : 1.5;
     const sotdAspect = sotdTexture.image ? sotdTexture.image.width / sotdTexture.image.height : 1.5;
     const sotmAspect = sotmTexture.image ? sotmTexture.image.width / sotmTexture.image.height : 1.5;
     const featuredAspect = featuredTexture.image ? featuredTexture.image.width / featuredTexture.image.height : 1.5;
+    const buttonAspect = buttonTexture.image ? buttonTexture.image.width / buttonTexture.image.height : 3;
 
     // Base height for cards
     const cardHeight = 2.5;
+
+    // Button dimensions
+    const buttonHeight = 0.35; // Adjust size as needed
+    const buttonWidth = buttonHeight * buttonAspect;
+    const buttonY = -cardHeight / 2 - buttonHeight / 2 + 0.5; // Position below card
 
     useFrame((state) => {
         if (!groupRef.current) return;
@@ -390,6 +524,39 @@ const AwardsMilestone = ({ z, scrollProgress }) => {
                         side={THREE.DoubleSide}
                     />
                 </mesh>
+                {/* BUTTON */}
+                <AwardButton
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        openOverlay(AWARDS_DATA.featured);
+                    }}
+                    texture={buttonTexture}
+                    width={buttonWidth}
+                    height={buttonHeight}
+                    position={[0, buttonY, 0.05]}
+                />
+                {/* AWARD LABEL */}
+                <Text
+                    position={[0, 0.95, 0.01]}
+                    fontSize={0.45}
+                    color="#1a1a1a"
+                    anchorX="center"
+                    anchorY="middle"
+                    font="/fonts/CabinSketch-Bold.ttf"
+                >
+                    FEATURED
+                </Text>
+                {/* AWARD COUNT */}
+                <Text
+                    position={[-0.05, 0, 0.01]}
+                    fontSize={0.8}
+                    color="#1a1a1a"
+                    anchorX="center"
+                    anchorY="middle"
+                    font="/fonts/CabinSketch-Bold.ttf"
+                >
+                    3
+                </Text>
             </group>
 
             {/* === SOTD (behind SOTY, rendered second) === */}
@@ -402,6 +569,39 @@ const AwardsMilestone = ({ z, scrollProgress }) => {
                         side={THREE.DoubleSide}
                     />
                 </mesh>
+                {/* BUTTON */}
+                <AwardButton
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        openOverlay(AWARDS_DATA.sotd);
+                    }}
+                    texture={buttonTexture}
+                    width={buttonWidth}
+                    height={buttonHeight}
+                    position={[0, buttonY, 0.05]}
+                />
+                {/* AWARD LABEL */}
+                <Text
+                    position={[0, 0.95, 0.01]}
+                    fontSize={0.45}
+                    color="#1a1a1a"
+                    anchorX="center"
+                    anchorY="middle"
+                    font="/fonts/CabinSketch-Bold.ttf"
+                >
+                    SOTD
+                </Text>
+                {/* AWARD COUNT */}
+                <Text
+                    position={[-0.05, 0, 0.01]}
+                    fontSize={0.8}
+                    color="#1a1a1a"
+                    anchorX="center"
+                    anchorY="middle"
+                    font="/fonts/CabinSketch-Bold.ttf"
+                >
+                    3
+                </Text>
             </group>
 
             {/* === SOTM (behind SOTY, rendered third) === */}
@@ -414,6 +614,39 @@ const AwardsMilestone = ({ z, scrollProgress }) => {
                         side={THREE.DoubleSide}
                     />
                 </mesh>
+                {/* BUTTON */}
+                <AwardButton
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        openOverlay(AWARDS_DATA.sotm);
+                    }}
+                    texture={buttonTexture}
+                    width={buttonWidth}
+                    height={buttonHeight}
+                    position={[0, buttonY, 0.05]}
+                />
+                {/* AWARD LABEL */}
+                <Text
+                    position={[0, 0.95, 0.01]}
+                    fontSize={0.45}
+                    color="#1a1a1a"
+                    anchorX="center"
+                    anchorY="middle"
+                    font="/fonts/CabinSketch-Bold.ttf"
+                >
+                    SOTM
+                </Text>
+                {/* AWARD COUNT */}
+                <Text
+                    position={[-0.05, 0, 0.01]}
+                    fontSize={0.8}
+                    color="#1a1a1a"
+                    anchorX="center"
+                    anchorY="middle"
+                    font="/fonts/CabinSketch-Bold.ttf"
+                >
+                    0
+                </Text>
             </group>
 
             {/* === SOTY (front, center, rendered LAST = always on top) === */}
@@ -426,6 +659,39 @@ const AwardsMilestone = ({ z, scrollProgress }) => {
                         side={THREE.DoubleSide}
                     />
                 </mesh>
+                {/* BUTTON */}
+                <AwardButton
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        openOverlay(AWARDS_DATA.soty);
+                    }}
+                    texture={buttonTexture}
+                    width={buttonWidth}
+                    height={buttonHeight}
+                    position={[0, buttonY, 0.05]}
+                />
+                {/* AWARD LABEL */}
+                <Text
+                    position={[0, 0.95, 0.01]}
+                    fontSize={0.45}
+                    color="#1a1a1a"
+                    anchorX="center"
+                    anchorY="middle"
+                    font="/fonts/CabinSketch-Bold.ttf"
+                >
+                    SOTY
+                </Text>
+                {/* AWARD COUNT */}
+                <Text
+                    position={[-0.05, 0, 0.01]}
+                    fontSize={0.8}
+                    color="#1a1a1a"
+                    anchorX="center"
+                    anchorY="middle"
+                    font="/fonts/CabinSketch-Bold.ttf"
+                >
+                    0
+                </Text>
             </group>
         </group>
     );
