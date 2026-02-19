@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useTexture } from '@react-three/drei';
+import { useTexture, Text } from '@react-three/drei';
 import * as THREE from 'three';
 
 /**
@@ -13,6 +13,25 @@ import * as THREE from 'three';
  *   corridorHeight: 3.5
  *   Bezpieczne strefy dekoracji: -5 do -15, -20 do -30, -34 do -46, -50 do -60, -64 do -75
  */
+
+const CABIN_SKETCH_URL = '/fonts/CabinSketch-Regular.ttf';
+
+const PictureContent = ({ imagePath, width, height }) => {
+    const texture = useTexture(imagePath);
+    return (
+        <mesh position={[0, 0, 0.01]}> {/* Lekko przed ramką */}
+            <planeGeometry args={[width, height]} />
+            <meshStandardMaterial
+                map={texture}
+                transparent={true}
+                alphaTest={0.1} // KLUCZOWE: Naprawia przezroczystość (wycina tło)
+                side={THREE.DoubleSide}
+                roughness={0.5}
+            />
+        </mesh>
+    );
+};
+
 const CorridorDecorations = ({ segmentLength, zOffset, corridorWidth = 4, corridorHeight = 3.5, zClip = 100000 }) => {
 
     const wallX = corridorWidth / 2 - 0.01;
@@ -73,6 +92,21 @@ const CorridorDecorations = ({ segmentLength, zOffset, corridorWidth = 4, corrid
             height: 1.5,             // Wysokość ramki  (proporcje jak tektura ~16:10)
             y: 0.3,                  // Wysokość na ścianie
             id: 'frame-1',
+            // Custom setup for "rysuneknaobraz1.png"
+            image: '/textures/corridor/rysuneknaobraz1.png',
+            imageWidth: 1.1,
+            imageHeight: 1.1,
+            offsetFromWall: 0.1, // Przesunięcie bliżej środka korytarza (0.1 unit)
+
+            // --- USTAWIENIA PODPISU (SIGNATURE SETTINGS) ---
+            signature: 'Author: Dasza',
+            // X: pozycja pozioma względem środka ramki (dodatnie = prawo, ujemne = lewo)
+            signatureX: 0.7,
+            // Y: pozycja pionowa względem środka ramki (dodatnie = góra, ujemne = dół)
+            signatureY: -0.45,
+            // Rozmiar czcionki
+            signatureSize: 0.1,
+            signatureColor: '#333333'
         },
         {
             z: zOffset - 25,         // Między Gallery a Studio (relZ -20 do -30)
@@ -104,6 +138,11 @@ const CorridorDecorations = ({ segmentLength, zOffset, corridorWidth = 4, corrid
     // STOLIK (TABLE)
     // =============================================
     const woodTexture = useTexture('/textures/corridor/texturadrewnadonozekbiurka.png');
+    const tableTopTexture = useTexture('/textures/corridor/gorastolika.png');
+
+    // Tekstury szafki
+    const cabinetFrontTexture = useTexture('/textures/corridor/szafkaprzod.png');
+    const cabinetRestTexture = useTexture('/textures/corridor/szafkaprzodgora.png');
 
     // Klonujemy teksturę dla nóg, żeby ją obrócić (bo user mówi że jest poziomo a ma być pionowo)
     const legTexture = useMemo(() => {
@@ -213,7 +252,7 @@ const CorridorDecorations = ({ segmentLength, zOffset, corridorWidth = 4, corrid
                     <boxGeometry args={[tableConfig.width, tableConfig.topThickness, tableConfig.depth]} />
                     <meshStandardMaterial attach="material-0" map={woodTexture} /> {/* Right */}
                     <meshStandardMaterial attach="material-1" map={woodTexture} /> {/* Left */}
-                    <meshStandardMaterial attach="material-2" color="#ffffff" roughness={0.2} /> {/* Top */}
+                    <meshStandardMaterial attach="material-2" map={tableTopTexture} roughness={0.5} /> {/* Top */}
                     <meshStandardMaterial attach="material-3" color="#ffffff" />   {/* Bottom */}
                     <meshStandardMaterial attach="material-4" map={woodTexture} /> {/* Front */}
                     <meshStandardMaterial attach="material-5" map={woodTexture} /> {/* Back */}
@@ -245,24 +284,55 @@ const CorridorDecorations = ({ segmentLength, zOffset, corridorWidth = 4, corrid
                 edytuj odpowiedni obiekt w tablicy 'frames' powyżej.
             */}
             {frames.map((frame) => (
-                <mesh
+                <group
                     key={frame.id}
                     position={[
-                        frame.side === 'left' ? -wallX : wallX,
+                        frame.side === 'left' ? -wallX + (frame.offsetFromWall || 0) : wallX - (frame.offsetFromWall || 0),
                         frame.y,
                         frame.z
                     ]}
                     rotation={[0, frame.side === 'left' ? Math.PI / 2 : -Math.PI / 2, 0]}
                 >
-                    <planeGeometry args={[frame.width, frame.height]} />
-                    <meshStandardMaterial
-                        map={frameTexture}
-                        transparent={true}
-                        alphaTest={0.1}
-                        side={THREE.DoubleSide}
-                        roughness={0.9}
-                    />
-                </mesh>
+                    {/* RAMKA */}
+                    <mesh>
+                        <planeGeometry args={[frame.width, frame.height]} />
+                        <meshStandardMaterial
+                            map={frameTexture}
+                            transparent={true}
+                            alphaTest={0.1}
+                            side={THREE.DoubleSide}
+                            roughness={0.9}
+                        />
+                    </mesh>
+
+                    {/* OBRAZEK WEWNĄTRZ (opcjonalny) */}
+                    {frame.image && (
+                        <PictureContent
+                            imagePath={frame.image}
+                            width={frame.imageWidth || frame.width * 0.7}
+                            height={frame.imageHeight || frame.height * 0.7}
+                        />
+                    )}
+
+                    {/* PODPIS (opcjonalny) */}
+                    {frame.signature && (
+                        <Text
+                            position={[
+                                // Używamy customowych pozycji lub domyślnych (prawy dolny róg)
+                                frame.signatureX !== undefined ? frame.signatureX : (frame.width / 2 - 0.1),
+                                frame.signatureY !== undefined ? frame.signatureY : (-frame.height / 2 + 0.15),
+                                0.02 // Slightly in front
+                            ]}
+                            fontSize={frame.signatureSize || 0.12}
+                            font={CABIN_SKETCH_URL}
+                            color={frame.signatureColor || "#333333"}
+                            anchorX="center" // Zmieniam na center, żeby łatwiej pozycjonować X/Y
+                            anchorY="middle"
+                        >
+                            {frame.signature}
+                        </Text>
+                    )}
+                </group>
             ))}
 
             {/* === SZAFKA (CABINET) === */}
@@ -275,7 +345,21 @@ const CorridorDecorations = ({ segmentLength, zOffset, corridorWidth = 4, corrid
             >
                 {/* Wymiary: X=0.5 (głębokość od ściany), Y=1.0 (wysokość), Z=0.8 (szerokość wzdłuż ściany) */}
                 <boxGeometry args={[0.5, 1.0, 0.8]} />
-                <meshStandardMaterial color="#8B5A2B" roughness={0.8} />
+                {/* 
+                    Materials for BoxGeometry:
+                    0: Right (+x) - Wall side
+                    1: Left (-x) - Corridor side (FRONT of cabinet) -> szafkaprzod.png
+                    2: Top (+y) -> szafkaprzodgora.png
+                    3: Bottom (-y) -> szafkaprzodgora.png (as requested)
+                    4: Front (+z) -> szafkaprzodgora.png (side)
+                    5: Back (-z) -> szafkaprzodgora.png (side)
+                */}
+                <meshStandardMaterial attach="material-0" map={cabinetRestTexture} />
+                <meshStandardMaterial attach="material-1" map={cabinetFrontTexture} />
+                <meshStandardMaterial attach="material-2" map={cabinetRestTexture} />
+                <meshStandardMaterial attach="material-3" map={cabinetRestTexture} />
+                <meshStandardMaterial attach="material-4" map={cabinetRestTexture} />
+                <meshStandardMaterial attach="material-5" map={cabinetRestTexture} />
             </mesh>
 
             {/* === STOJĄCA RAMKA NA SZAFCE (STANDING FRAME) === */}
@@ -311,21 +395,33 @@ const CorridorDecorations = ({ segmentLength, zOffset, corridorWidth = 4, corrid
                 />
             </mesh>
 
-            {/* === KRATKA WENTYLACYJNA (VENTILATION GRATE) === */}
-            {/* Za awatarem (blisko początku), lewa ściana, wysoko. */}
-            <mesh
-                position={[-wallX + 0.01, ceilingY - 0.6, zOffset - 9]}
-                rotation={[0, Math.PI / 2, 0]} // Na lewej ścianie
-            >
-                <planeGeometry args={[0.8, 0.5]} />
-                <meshStandardMaterial
-                    map={grateTexture}
-                    transparent={true}
-                    alphaTest={0.1}
-                    side={THREE.DoubleSide}
-                    roughness={0.8}
-                />
-            </mesh>
+            {/* === KRATKI WENTYLACYJNE (VENTILATION GRATES) === */}
+            {/* Generujemy kratkę na przeciwległej ścianie dla każdego obrazu */}
+            {frames.map((frame, i) => {
+                const isFrameLeft = frame.side === 'left';
+                const grateSide = isFrameLeft ? 'right' : 'left';
+
+                return (
+                    <mesh
+                        key={`grate-${i}`}
+                        position={[
+                            grateSide === 'left' ? -wallX + 0.01 : wallX - 0.01,
+                            ceilingY - 0.6, // Wysoko, tak jak ta pierwsza
+                            frame.z // Ta sama pozycja Z co obrazu
+                        ]}
+                        rotation={[0, grateSide === 'left' ? Math.PI / 2 : -Math.PI / 2, 0]}
+                    >
+                        <planeGeometry args={[0.8, 0.5]} />
+                        <meshStandardMaterial
+                            map={grateTexture}
+                            transparent={true}
+                            alphaTest={0.1}
+                            side={THREE.DoubleSide}
+                            roughness={0.8}
+                        />
+                    </mesh>
+                );
+            })}
 
         </group >
     );

@@ -35,18 +35,18 @@
 - **Pliki:** [InfiniteSkyManager.jsx](file:///c:/Users/tomsz/Desktop/portfolio/portfolio-itom/src/components/canvas/rooms/About/InfiniteSkyManager.jsx)
 
 ### 4. Dodać dekoracje do Corridor (jest pusty!)
-- [ ] Istniejące dekoracje (`Doodles.jsx`) — zweryfikować co jest renderowane i czego brakuje
-- [ ] Wykorzystać istniejące tekstury z `/textures/corridor/decorations/`:
+- [X] Istniejące dekoracje (`Doodles.jsx`) — zweryfikować co jest renderowane i czego brakuje
+- [X] Wykorzystać istniejące tekstury z `/textures/corridor/decorations/`:
   - `coffee_cup.webp`, `coffee_debug.webp`, `idea_process.webp`, `paper_airplane.webp`, `paper_ball.webp`, `pencil.webp`, `while_true_loop.webp`
-- [ ] Dodać nowe elementy:
-  - [ ] Ramki/obrazki na ścianach w stylu "hand-drawn" (np. szkice projektów)
-  - [ ] Biurko/stoliczek z kawą i notatkami
-  - [ ] Znaki/strzałki prowadzące do pokojów
-  - [ ] Rośliny w doniczkach (styl paper/sketch)
-  - [ ] Regał z książkami (cienkie prostokąty z teksturami)
-  - [ ] Tabliczki z cytatami (motywacyjne/programistyczne)
-- [ ] Rozłożyć dekoracje po obu stronach korytarza
-- [ ] Dodać subtelne animacje (floating, pulsing)
+- [X] Dodać nowe elementy:
+  - [X] Ramki/obrazki na ścianach w stylu "hand-drawn" (np. szkice projektów)
+  - [X] Biurko/stoliczek z kawą i notatkami
+  - [X] Znaki/strzałki prowadzące do pokojów
+  - [X] Rośliny w doniczkach (styl paper/sketch)
+  - [X] Regał z książkami (cienkie prostokąty z teksturami)
+  - [X] Tabliczki z cytatami (motywacyjne/programistyczne)
+- [X] Rozłożyć dekoracje po obu stronach korytarza
+- [X] Dodać subtelne animacje (floating, pulsing)
 - **Pliki:** [Corridor.jsx](file:///c:/Users/tomsz/Desktop/portfolio/portfolio-itom/src/components/canvas/corridor/Corridor.jsx), [Doodles.jsx](file:///c:/Users/tomsz/Desktop/portfolio/portfolio-itom/src/components/canvas/corridor/Doodles.jsx), [CorridorWalls.jsx](file:///c:/Users/tomsz/Desktop/portfolio/portfolio-itom/src/components/canvas/corridor/CorridorWalls.jsx)
 
 ### 5. Poprawić grafiki — czytelność vs detale w tle

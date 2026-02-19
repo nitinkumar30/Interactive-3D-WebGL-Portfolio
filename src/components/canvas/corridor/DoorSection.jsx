@@ -941,7 +941,7 @@ const DoorSection = ({
                         {/* Door Front Texture */}
                         <mesh
                             position={[doorMeshX, -0.2, 0]}
-                            scale={[side === 'right' ? -1 : 1, 1, 1]}
+                            scale={[(side === 'right' && label !== 'THE STUDIO') ? -1 : 1, 1, 1]}
                             onClick={handleClick}
                             onPointerEnter={handlePointerEnter}
                             onPointerLeave={handlePointerLeave}
