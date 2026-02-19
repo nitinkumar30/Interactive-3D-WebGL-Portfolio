@@ -24,6 +24,53 @@ const GAP = 2.5;
 // 0.2 = 20% crop from the right (corridor side)
 const RIGHT_CROP_AMOUNT = 0.2;
 
+// === LINE SOFTNESS ===
+// Controls how much to soften black outlines on domki & railing textures.
+// 0 = no change (pure black stays black)
+// 80 = black becomes ~31% gray (subtle softening)
+// 128 = black becomes 50% gray (strong softening)
+// 200 = black becomes ~78% gray (very faint lines)
+const LINE_SOFTNESS = 120;
+
+/**
+ * Processes a Three.js texture to soften black lines.
+ * Remaps pixel brightness: black (0) → gray (minBrightness), white (255) → white (255).
+ * Alpha channel is preserved untouched.
+ */
+function softenBlackLines(texture, minBrightness) {
+    if (!texture || !texture.image || minBrightness <= 0) return texture;
+
+    const img = texture.image;
+    const canvas = document.createElement('canvas');
+    canvas.width = img.width;
+    canvas.height = img.height;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const data = imageData.data;
+    const range = 255 - minBrightness;
+
+    for (let i = 0; i < data.length; i += 4) {
+        // Remap R, G, B — leave Alpha (i+3) untouched
+        data[i] = minBrightness + (data[i] / 255) * range; // R
+        data[i + 1] = minBrightness + (data[i + 1] / 255) * range; // G
+        data[i + 2] = minBrightness + (data[i + 2] / 255) * range; // B
+    }
+
+    ctx.putImageData(imageData, 0, 0);
+
+    const newTexture = new THREE.CanvasTexture(canvas);
+    // Copy over relevant properties from the original texture
+    newTexture.wrapS = texture.wrapS;
+    newTexture.wrapT = texture.wrapT;
+    newTexture.repeat.copy(texture.repeat);
+    newTexture.offset.copy(texture.offset);
+    newTexture.colorSpace = texture.colorSpace;
+    newTexture.needsUpdate = true;
+    return newTexture;
+}
+
 const GalleryRoom = ({ showRoom, onReady }) => {
     const { openOverlay } = useScene();
     const groupRef = useRef();
@@ -168,10 +215,14 @@ const GalleryRoom = ({ showRoom, onReady }) => {
 
     // --- GEOMETRY & MATERIALS ---
     const floorTexture = useTexture('/textures/gallery/floor.webp');
-    const railingTexture = useTexture('/textures/gallery/railing.webp');
-    const housesTexture = useTexture('/textures/gallery/domki.webp');
+    const railingTextureRaw = useTexture('/textures/gallery/railing.webp');
+    const housesTextureRaw = useTexture('/textures/gallery/domki.webp');
     const cityTexture = useTexture('/textures/gallery/miastotlo.webp');
     const birdTexture = useTexture('/textures/gallery/bird.webp');
+
+    // Soften black outlines on domki & railing
+    const housesTexture = useMemo(() => softenBlackLines(housesTextureRaw, LINE_SOFTNESS), [housesTextureRaw]);
+    const railingTexture = useMemo(() => softenBlackLines(railingTextureRaw, LINE_SOFTNESS), [railingTextureRaw]);
     const clothespinTexture = useTexture('/textures/gallery/klamerka.webp');
 
     useEffect(() => {
@@ -198,6 +249,21 @@ const GalleryRoom = ({ showRoom, onReady }) => {
         return {
             floor: floorMat,
             rope: new THREE.MeshStandardMaterial({ color: '#666666', roughness: 1 }),
+            threshold: new THREE.MeshStandardMaterial({
+                map: (() => {
+                    // Use existing baseboard texture logic if available, or load new
+                    // Since we don't have it loaded here, let's load it or borrow it
+                    // Better to load it cleanly here
+                    const t = new THREE.TextureLoader().load('/textures/corridor/texturadoprogow.png');
+                    t.colorSpace = THREE.SRGBColorSpace;
+                    t.wrapS = t.wrapT = THREE.RepeatWrapping;
+                    t.repeat.set(15 / 2.524, 1); // 15 width / ~2.5 unit per tile
+                    return t;
+                })(),
+                roughness: 0.9,
+                metalness: 0,
+                side: THREE.DoubleSide
+            })
         };
     }, [floorTexture]);
 
@@ -259,6 +325,15 @@ const GalleryRoom = ({ showRoom, onReady }) => {
                         side={THREE.DoubleSide}
                         alphaTest={0.1}
                     />
+                </mesh>
+
+                {/* === THRESHOLD (At the end of the floor) === */}
+                <mesh
+                    position={[0, 0.01, -3.9]}
+                    rotation={[-Math.PI / 2, 0, 0]}
+                >
+                    <planeGeometry args={[15, 0.15]} />
+                    <primitive object={materials.threshold} />
                 </mesh>
 
                 {/* === CLOTHESLINE SYSTEM === */}

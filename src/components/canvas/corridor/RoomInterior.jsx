@@ -91,6 +91,18 @@ const RoomInterior = memo(({ label, showRoom, onReady, isExiting }) => {
             corridorCeiling: new THREE.MeshStandardMaterial({ map: ceilTex, roughness: 0.9, side: THREE.DoubleSide }),
             bbLeft: new THREE.MeshStandardMaterial({ map: bbLeft, roughness: 0.8, side: THREE.DoubleSide }),
             bbRight: new THREE.MeshStandardMaterial({ map: bbRight, roughness: 0.8, side: THREE.DoubleSide }),
+            threshold: new THREE.MeshStandardMaterial({
+                map: (() => {
+                    const t = bbTexSrc.clone();
+                    t.needsUpdate = true;
+                    t.wrapS = t.wrapT = THREE.RepeatWrapping;
+                    t.repeat.set(corridorWidth / NATURAL_TILE_W, 1);
+                    return t;
+                })(),
+                roughness: 0.9,
+                metalness: 0,
+                side: THREE.DoubleSide
+            }),
             // Room materials (keep flat for rooms that have their own content)
             roomFloor: new THREE.MeshStandardMaterial({ color: '#e5e5e5', roughness: 0.95, side: THREE.DoubleSide }),
             roomCeiling: new THREE.MeshStandardMaterial({ color: '#fafafa', roughness: 0.9, side: THREE.DoubleSide }),
@@ -104,6 +116,7 @@ const RoomInterior = memo(({ label, showRoom, onReady, isExiting }) => {
         corridorSideWall: new THREE.PlaneGeometry(corridorDepth, corridorHeight),
         corridorFloorCeiling: new THREE.PlaneGeometry(corridorWidth, corridorDepth),
         corridorBaseboard: new THREE.PlaneGeometry(corridorDepth, 0.15),
+        threshold: new THREE.PlaneGeometry(corridorWidth, 0.15),
         roomFloorCeiling: new THREE.PlaneGeometry(roomWidth, roomDepth),
         roomSideWall: new THREE.PlaneGeometry(roomDepth, roomHeight),
         roomBackWall: new THREE.PlaneGeometry(roomWidth, roomHeight)
@@ -167,6 +180,14 @@ const RoomInterior = memo(({ label, showRoom, onReady, isExiting }) => {
                 rotation={[0, -Math.PI / 2, 0]}
                 geometry={geometries.corridorBaseboard}
                 material={materials.bbRight}
+            />
+
+            {/* === THRESHOLD (End of Mini-Corridor) === */}
+            <mesh
+                position={[0, -corridorHeight / 2 + 0.005, -corridorDepth]}
+                rotation={[-Math.PI / 2, 0, 0]}
+                geometry={geometries.threshold}
+                material={materials.threshold}
             />
 
             {/* === ROOM CONTENT === */}
