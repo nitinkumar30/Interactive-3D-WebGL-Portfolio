@@ -1,6 +1,6 @@
 import { useState, useRef, useMemo, useEffect } from 'react';
 import { useFrame, useLoader, useThree } from '@react-three/fiber';
-import { Text } from '@react-three/drei';
+import { Text, PositionalAudio } from '@react-three/drei';
 import * as THREE from 'three';
 import gsap from 'gsap';
 import SkyChunk, { CHUNK_LENGTH, ROOM_Z } from './SkyChunk';
@@ -14,6 +14,14 @@ import '../../shaders/RevealBasicMaterial'; // Registers brush-stroke reveal for
  * World group moves with scroll, chunks stay at fixed positions relative to group.
  * Includes Story Milestones that loop with the content!
  */
+
+import { useAudio } from '../../../../context/AudioManager';
+
+export const BALLOON_AUDIO_SETTINGS = {
+    volume: 1.0,
+    distance: 2,
+    rolloff: 2
+};
 
 /**
  * Reusable Button Component with Hover Effect + Brush-Stroke Reveal
@@ -1005,6 +1013,19 @@ const SkillBalloon = ({ config, revealFactor, spreadFactor, time }) => {
     const hideDelayRef = useRef(); // Track pending gsap.delayedCall
     const textRef = useRef();
 
+    // Audio Ref
+    const balloonAudioRef = useRef();
+    const { globalVolume, isMuted } = useAudio();
+
+    const playBalloonSound = () => {
+        if (balloonAudioRef.current) {
+            const vol = isMuted ? 0 : BALLOON_AUDIO_SETTINGS.volume * globalVolume;
+            balloonAudioRef.current.setVolume(vol);
+            if (balloonAudioRef.current.isPlaying) balloonAudioRef.current.stop();
+            balloonAudioRef.current.play();
+        }
+    };
+
     const aspect = texture.image ? texture.image.width / texture.image.height : 1;
     const baseHeight = SIZE_MULTIPLIERS[config.size];
 
@@ -1218,7 +1239,10 @@ const SkillBalloon = ({ config, revealFactor, spreadFactor, time }) => {
                     position={[0, 0, 0.001]}
                     onClick={(e) => {
                         e.stopPropagation();
-                        if (!isPopping) setIsPopping(true);
+                        if (!isPopping) {
+                            setIsPopping(true);
+                            playBalloonSound();
+                        }
                     }}
                     onPointerOver={handlePointerOver}
                     onPointerOut={handlePointerOut}
@@ -1262,6 +1286,15 @@ const SkillBalloon = ({ config, revealFactor, spreadFactor, time }) => {
                         {config.label}
                     </Text>
                 )}
+
+                <PositionalAudio
+                    ref={balloonAudioRef}
+                    url="/sounds/baloonpoop.mp3"
+                    distanceModel="exponential"
+                    rolloffFactor={BALLOON_AUDIO_SETTINGS.rolloff}
+                    refDistance={BALLOON_AUDIO_SETTINGS.distance}
+                    loop={false}
+                />
             </group>
         </group>
     );

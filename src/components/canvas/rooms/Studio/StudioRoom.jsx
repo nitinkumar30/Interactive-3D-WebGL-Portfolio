@@ -7,7 +7,19 @@ import { useScene } from '../../../../context/SceneContext';
 import { useAchievements } from '../../../../context/AchievementsContext';
 import { TextureLoader } from 'three';
 import FloatingCodeParticles from './FloatingCodeParticles';
+import { PositionalAudio } from '@react-three/drei';
+import { useAudio } from '../../../../context/AudioManager';
 import '../../shaders/RevealMaterial';
+
+// ============================================
+// ⚙️ AUDIO SETTINGS - TWEAK HERE
+// Edytuj te wartości, aby zmienić głośność i zasięg słyszalności szumu monitorów
+// ============================================
+export const AUDIO_SETTINGS = {
+    volume: 1,
+    distance: 2,
+    rolloff: 1.0
+};
 
 // ============================================
 // CONFIG - Adjust these values as needed
@@ -77,6 +89,15 @@ const StudioRoom = ({ showRoom, onReady, isExiting }) => {
 
     // Achievements Context
     const { showTutorial, unlockAchievement, hidePopup } = useAchievements();
+    const { globalVolume, isMuted } = useAudio();
+    const effectiveVolume = isMuted ? 0 : AUDIO_SETTINGS.volume * globalVolume;
+
+    const audioRef = useRef();
+    useEffect(() => {
+        if (audioRef.current && audioRef.current.setVolume) {
+            audioRef.current.setVolume(effectiveVolume);
+        }
+    }, [effectiveVolume]);
 
     useEffect(() => {
         if (isExiting || isTeleporting) {
@@ -470,6 +491,16 @@ const StudioRoom = ({ showRoom, onReady, isExiting }) => {
 
     return (
         <group ref={groupRef} position={[0, -1.2, 0]}>
+            <PositionalAudio
+                ref={audioRef}
+                url="/sounds/szummonitorow.mp3"
+                distanceModel="exponential"
+                refDistance={AUDIO_SETTINGS.distance}
+                rolloffFactor={AUDIO_SETTINGS.rolloff}
+                loop
+                autoplay
+                volume={effectiveVolume}
+            />
 
             {/* THE INFINITE TOWER */}
             <group

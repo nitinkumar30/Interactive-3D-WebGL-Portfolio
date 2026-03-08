@@ -41,7 +41,8 @@ export const AudioProvider = ({ children }) => {
                 // Scale effective volume by global volume
                 // We stored the requested "base" volume on the object as _baseVolume
                 const base = audio._baseVolume !== undefined ? audio._baseVolume : 1.0;
-                audio.volume = base * globalVolume;
+                let targetVol = base * globalVolume;
+                audio.volume = Math.max(0, Math.min(1, targetVol));
             }
         });
 
@@ -62,7 +63,14 @@ export const AudioProvider = ({ children }) => {
 
     const play = useCallback((soundName, { loop = false, volume = 1.0 } = {}) => {
         // Graceful degradation if files missing
-        const path = `/sounds/${soundName}.mp3`;
+        const soundPaths = {
+            'szumwiatru': '/sounds/szumwiatru.mp3', // Szum wiatru w pokoju About
+            'szummiasta': '/sounds/szummiasta.mp3', // Szum miasta w pokoju The Gallery
+            'uchyleniedrzwi': '/sounds/uchyleniedrzwi.mp3', // Skrzypienie przy najechaniu
+            'otwarciedrzwi': '/sounds/otwarciedrzwi.mp3',   // Otwarcie głównych/bocznych drzwi
+            'zamknieciedrzwi': '/sounds/zamknieciedrzwi.mp3' // Zamykanie drzwi
+        };
+        const path = soundPaths[soundName] || `/sounds/${soundName}.mp3`;
 
         // In "simulation mode" or if file missing, this might error.
         // We'll trust the browser to handle 404s without crashing JS.
@@ -74,7 +82,8 @@ export const AudioProvider = ({ children }) => {
 
         // Apply current global state
         audio.muted = isMuted;
-        audio.volume = volume * globalVolume;
+        let targetVol = volume * globalVolume;
+        audio.volume = Math.max(0, Math.min(1, targetVol));
 
         // Store reference (clearing old one if exists with same name for simplicity)
         if (activeSounds.current[soundName]) {
@@ -83,7 +92,7 @@ export const AudioProvider = ({ children }) => {
         activeSounds.current[soundName] = audio;
 
         // Simulation log
-        // console.log(`[Audio] Playing ${soundName} (loop: ${loop}, vol: ${audio.volume.toFixed(2)})`);
+        console.log(`[Audio] Playing ${soundName} (loop: ${loop}, vol: ${audio.volume.toFixed(2)})`);
 
         // Attempt to play
         const playPromise = audio.play();
@@ -91,13 +100,13 @@ export const AudioProvider = ({ children }) => {
         if (playPromise !== undefined) {
             playPromise.catch(error => {
                 if (error.name === 'NotAllowedError') {
-                    // console.warn('[Audio] Auto-play blocked. Waiting for interaction.');
+                    console.warn('[Audio] Auto-play blocked. Waiting for interaction.');
                     // Common in browsers before user interacts. Silent fail is preferred to spam.
                 } else if (error.name === 'NotSupportedError' || error.message.includes('404')) {
-                   // console.warn(`[Audio] File not found or not supported: ${path}. (This is expected if files are missing)`);
+                    console.warn(`[Audio] File not found or not supported: ${path}. (This is expected if files are missing)`);
                 } else {
                     // Other errors (e.g. 404 often comes as a network error event on the element, not the promise)
-                   // console.warn('[Audio] Play error:', error);
+                    console.warn('[Audio] Play error:', error);
                 }
             });
         }

@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect, useCallback } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
-import { Text } from '@react-three/drei';
+import { Text, PositionalAudio } from '@react-three/drei';
 import * as THREE from 'three';
 import gsap from 'gsap';
 import MessagePaper from './MessagePaper';
@@ -8,6 +8,7 @@ import SocialBarrel from './SocialBarrel';
 import { useScene } from '../../../../context/SceneContext';
 import GalleryClouds from '../Gallery/GalleryClouds';
 import { useAchievements } from '../../../../context/AchievementsContext';
+import { useAudio } from '../../../../context/AudioManager';
 
 // ============================================
 // ============================================
@@ -17,6 +18,16 @@ import { useAchievements } from '../../../../context/AchievementsContext';
 import { useTexture } from '@react-three/drei';
 
 const WAVE_LAYERS = 4;
+
+// ============================================
+// ⚙️ AUDIO SETTINGS - TWEAK HERE
+// Edytuj te wartości, aby zmienić głośność i zasięg słyszalności szumu morza
+// ============================================
+export const AUDIO_SETTINGS = {
+    volume: 2,
+    distance: 2,           // Dystans, od którego dźwięk zaczyna cichnąć (refDistance)
+    rolloff: 1.2           // Szybkość cichnięcia (rolloffFactor)
+};
 
 // ============================================
 // ⚙️ LATARNIA SETTINGS - TWEAK HERE
@@ -83,6 +94,15 @@ const ContactRoom = ({ showRoom, onReady, isExiting }) => {
     const { camera } = useThree();
     const { isTeleporting } = useScene();
     const { showTutorial, unlockAchievement, hidePopup } = useAchievements();
+    const { globalVolume, isMuted } = useAudio();
+    const effectiveVolume = isMuted ? 0 : AUDIO_SETTINGS.volume * globalVolume;
+
+    const audioRef = useRef();
+    useEffect(() => {
+        if (audioRef.current && audioRef.current.setVolume) {
+            audioRef.current.setVolume(effectiveVolume);
+        }
+    }, [effectiveVolume]);
 
     useEffect(() => {
         if (isExiting || isTeleporting) {
@@ -292,6 +312,17 @@ const ContactRoom = ({ showRoom, onReady, isExiting }) => {
 
     return (
         <group position={[0, -0.7, -5]}>
+            <PositionalAudio
+                ref={audioRef}
+                url="/sounds/szummorza.mp3"
+                distanceModel="exponential"
+                refDistance={AUDIO_SETTINGS.distance}
+                rolloffFactor={AUDIO_SETTINGS.rolloff}
+                loop
+                autoplay
+                volume={effectiveVolume}
+            />
+
             {/* ☁️ CLOUDS */}
             <GalleryClouds count={45} seed={88} rotationOffset={[0, 1, 0]} />
 

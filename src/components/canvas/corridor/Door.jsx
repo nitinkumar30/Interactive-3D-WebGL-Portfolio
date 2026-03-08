@@ -3,6 +3,16 @@ import { useFrame, useThree } from '@react-three/fiber';
 import { Text } from '@react-three/drei';
 import * as THREE from 'three';
 import gsap from 'gsap';
+import { PositionalAudio } from '@react-three/drei';
+import { useAudio } from '../../../../context/AudioManager';
+
+// Global settings for entrance doors audio
+export const ENTRANCE_DOOR_AUDIO_SETTINGS = {
+    hoverVolume: 2.0, // Volume for "uchyleniedrzwi" (hovering the door)
+    openVolume: 2.0,  // Volume for "otwarciedrzwi" (opening the door fully)
+    distance: 3,      // Reference distance for spatial audio before it starts dropping off
+    rolloff: 2        // How fast the sound fades away (exponential)
+};
 
 /**
  * Door Component - Enhanced with floating label and proximity glow
@@ -26,6 +36,11 @@ const Door = ({
     const isNearRef = useRef(false);
     const { camera } = useThree();
     const closeTimerRef = useRef(null);
+    const { globalVolume, isMuted } = useAudio(); // Using globalVolume instead of play
+
+    // Audio Refs for 3D positional sound
+    const hoverAudioRef = useRef();
+    const openAudioRef = useRef();
 
     const doorWidth = 1.2;
     const doorHeight = 2.2;
@@ -77,6 +92,15 @@ const Door = ({
 
         isOpenRef.current = true;
         const openAngle = side === 'left' ? Math.PI * 0.6 : -Math.PI * 0.6;
+
+        console.log("[Door] Opening door, playing sound");
+        // Play the door opening sound exactly when the animation starts
+        if (openAudioRef.current) {
+            const vol = isMuted ? 0 : ENTRANCE_DOOR_AUDIO_SETTINGS.openVolume * globalVolume;
+            openAudioRef.current.setVolume(vol);
+            if (openAudioRef.current.isPlaying) openAudioRef.current.stop();
+            openAudioRef.current.play();
+        }
 
         gsap.to(doorRef.current.rotation, {
             y: openAngle,
@@ -168,19 +192,34 @@ const Door = ({
                 </Text>
             </group>
 
-            {/* === PROXIMITY GLOW === */}
-            <mesh
-                ref={glowRef}
-                position={[0, 0, -0.1]}
-            >
-                <planeGeometry args={[doorWidth + 0.6, doorHeight + 0.6]} />
+            {/* Outline Glow (always visible but fades based on distance) */}
+            <mesh position={[0, -0.2, -0.05]} rotation={[0, Math.PI, 0]}>
+                <planeGeometry args={[doorWidth + 0.3, doorHeight + 0.3]} />
                 <meshBasicMaterial
-                    color="#39FF14"
-                    transparent
-                    opacity={0.1}
-                    side={THREE.DoubleSide}
+                    color="#ffffff"
+                    transparent={true}
+                    opacity={glowIntensity} // Dynamic opacity based on proximity
+                    depthWrite={false}
                 />
             </mesh>
+
+            {/* SPATIAL AUDIO NODES (Attached slightly in front of the door) */}
+            <PositionalAudio
+                ref={hoverAudioRef}
+                url="/sounds/uchyleniedrzwi.mp3"
+                distanceModel="exponential"
+                rolloffFactor={ENTRANCE_DOOR_AUDIO_SETTINGS.rolloff}
+                refDistance={ENTRANCE_DOOR_AUDIO_SETTINGS.distance}
+                loop={false}
+            />
+            <PositionalAudio
+                ref={openAudioRef}
+                url="/sounds/otwarciedrzwi.mp3"
+                distanceModel="exponential"
+                rolloffFactor={ENTRANCE_DOOR_AUDIO_SETTINGS.rolloff}
+                refDistance={ENTRANCE_DOOR_AUDIO_SETTINGS.distance}
+                loop={false}
+            />
 
             {/* Door Frame */}
             <group>
@@ -203,11 +242,25 @@ const Door = ({
                 <mesh
                     position={[side === 'left' ? doorWidth / 2 : -doorWidth / 2, 0, 0.02]}
                     onClick={handleClick}
-                    onPointerEnter={() => {
+                    onPointerEnter={(e) => {
+                        e.stopPropagation();
+                        if (!isHoveredRef.current && !isOpenRef.current) {
+                            console.log("[Door] Hovering door, playing sound");
+
+                            if (hoverAudioRef.current && !isHoveredRef.current) {
+                                const vol = isMuted ? 0 : ENTRANCE_DOOR_AUDIO_SETTINGS.hoverVolume * globalVolume;
+                                hoverAudioRef.current.setVolume(vol);
+                                if (hoverAudioRef.current.isPlaying) hoverAudioRef.current.stop();
+                                hoverAudioRef.current.play();
+                            }
+                        }
                         isHoveredRef.current = true;
                     }}
                     onPointerLeave={() => {
                         isHoveredRef.current = false;
+                        if (hoverAudioRef.current && hoverAudioRef.current.isPlaying) {
+                            hoverAudioRef.current.stop();
+                        }
                     }}
                 >
                     <planeGeometry args={[doorWidth, doorHeight]} />

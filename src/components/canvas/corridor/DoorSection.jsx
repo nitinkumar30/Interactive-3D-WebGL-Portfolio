@@ -1,18 +1,28 @@
 import { useRef, useState, useCallback, useEffect, useMemo } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
-import { Text, useTexture } from '@react-three/drei';
+import { Text, useTexture, PositionalAudio } from '@react-three/drei';
 import * as THREE from 'three';
 import gsap from 'gsap';
 import RoomInterior from './RoomInterior';
 import '../shaders/RevealMaterial'; // Registers alpha-discard reveal shader
 import { useScene } from '../../../context/SceneContext';
 import { useAchievements } from '../../../context/AchievementsContext';
+import { useAudio } from '../../../context/AudioManager';
 
 // Constants from CorridorSegment
 const WALL_X_OUTER = 3.5;
 const WALL_X_INNER = 1.7;
 const DOOR_Z_SPAN = 4;
 const CORRIDOR_HEIGHT = 3.5;
+
+export const DOOR_AUDIO_SETTINGS = {
+    hoverVolume: 0.8, // Volume for "uchyleniedrzwi" (hovering the door)
+    openVolume: 0.2,  // Volume for "otwarciedrzwi" (opening the door fully)
+    closeVolume: 0.2, // Volume when door closes (playing same sound reversed/again)
+    distance: 3,      // Reference distance for spatial audio before it starts dropping off
+    rolloff: 2,       // How fast the sound fades away (exponential)
+    closeDelay: 0.5   // Seconds to wait before playing the close door sound
+};
 
 // Calculate sawtooth wall geometry
 const WALL_DX = WALL_X_OUTER - WALL_X_INNER; // 1.8
@@ -100,8 +110,12 @@ const DoorSection = ({
     } = useScene();
 
     const { unlockAchievement } = useAchievements();
+    const { globalVolume, isMuted } = useAudio();
 
-
+    // Audio Refs for 3D positional sound
+    const hoverAudioRef = useRef();
+    const openAudioRef = useRef();
+    const closeAudioRef = useRef();
 
     // Map label to ID for teleport matching
     const doorId = useMemo(() => {
@@ -512,6 +526,13 @@ const DoorSection = ({
         setIsOpen(true);
         const openAngle = side === 'left' ? Math.PI * 0.6 : -Math.PI * 0.6;
 
+        if (!fastMode && openAudioRef.current) {
+            const vol = isMuted ? 0 : DOOR_AUDIO_SETTINGS.openVolume * globalVolume;
+            openAudioRef.current.setVolume(vol);
+            if (openAudioRef.current.isPlaying) openAudioRef.current.stop();
+            openAudioRef.current.play();
+        }
+
         // FAST MODE: Ultra-fast durations for teleport entry
         const handleDuration = fastMode ? 0.01 : 0.15;
         const doorDuration = fastMode ? 0.01 : 0.7;
@@ -730,6 +751,17 @@ const DoorSection = ({
 
         setIsAnimating(true);
 
+        if (closeAudioRef.current) {
+            setTimeout(() => {
+                const vol = isMuted ? 0 : DOOR_AUDIO_SETTINGS.closeVolume * globalVolume;
+                if (closeAudioRef.current) {
+                    closeAudioRef.current.setVolume(vol);
+                    if (closeAudioRef.current.isPlaying) closeAudioRef.current.stop();
+                    closeAudioRef.current.play();
+                }
+            }, DOOR_AUDIO_SETTINGS.closeDelay * 1000);
+        }
+
         // Reset handle
         if (handleRef.current) {
             gsap.to(handleRef.current.rotation, {
@@ -782,6 +814,13 @@ const DoorSection = ({
         setIsHovered(true);
         document.body.style.cursor = "url('/cursors/cursor-pointer.webp'), pointer";
 
+        if (hoverAudioRef.current && !isHovered) {
+            const vol = isMuted ? 0 : DOOR_AUDIO_SETTINGS.hoverVolume * globalVolume;
+            hoverAudioRef.current.setVolume(vol);
+            if (hoverAudioRef.current.isPlaying) hoverAudioRef.current.stop();
+            hoverAudioRef.current.play();
+        }
+
         // Slightly open door on hover
         if (doorRef.current) {
             gsap.to(doorRef.current.rotation, {
@@ -827,6 +866,10 @@ const DoorSection = ({
         if (isOpen || isAnimating) return;
         setIsHovered(false);
         document.body.style.cursor = "url('/cursors/cursor-default.png'), auto";
+
+        if (hoverAudioRef.current && hoverAudioRef.current.isPlaying) {
+            hoverAudioRef.current.stop();
+        }
 
         // Close door
         if (doorRef.current) {
@@ -1191,6 +1234,32 @@ const DoorSection = ({
                         </group>
                     </group>
                 </group>
+
+                {/* SPATIAL AUDIO NODES (Attached slightly in front of the door) */}
+                <PositionalAudio
+                    ref={hoverAudioRef}
+                    url="/sounds/uchyleniedrzwi.mp3"
+                    distanceModel="exponential"
+                    rolloffFactor={DOOR_AUDIO_SETTINGS.rolloff}
+                    refDistance={DOOR_AUDIO_SETTINGS.distance}
+                    loop={false}
+                />
+                <PositionalAudio
+                    ref={openAudioRef}
+                    url="/sounds/otwarciedrzwi.mp3"
+                    distanceModel="exponential"
+                    rolloffFactor={DOOR_AUDIO_SETTINGS.rolloff}
+                    refDistance={DOOR_AUDIO_SETTINGS.distance}
+                    loop={false}
+                />
+                <PositionalAudio
+                    ref={closeAudioRef}
+                    url="/sounds/zamknieciedrzwi.mp3"
+                    distanceModel="exponential"
+                    rolloffFactor={DOOR_AUDIO_SETTINGS.rolloff}
+                    refDistance={DOOR_AUDIO_SETTINGS.distance}
+                    loop={false}
+                />
             </group>
         </group >
     );

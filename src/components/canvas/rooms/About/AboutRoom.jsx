@@ -1,15 +1,26 @@
 import { useRef, useState, useEffect } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
-import { Text } from '@react-three/drei';
+import { Text, PositionalAudio } from '@react-three/drei';
 import * as THREE from 'three';
 import PaperAirplane from './PaperAirplane';
 import InfiniteSkyManager from './InfiniteSkyManager';
 import StoryMilestone from './StoryMilestone';
 import { useScene } from '../../../../context/SceneContext';
 import { useAchievements } from '../../../../context/AchievementsContext';
+import { useAudio } from '../../../../context/AudioManager';
 
 // Chunk length for looping flight effect (matches SkyChunk)
 const CHUNK_LENGTH = 40;
+
+// ============================================
+// ⚙️ AUDIO SETTINGS - TWEAK HERE
+// Edytuj te wartości, aby zmienić głośność i zasięg słyszalności szumu wiatru
+// ============================================
+export const AUDIO_SETTINGS = {
+    volume: 2.5,
+    distance: 2,
+    rolloff: 0.8
+};
 
 // Story sections - positions define where each milestone appears
 // Using CHUNK_LENGTH to create looping story (every ~40 units restarts)
@@ -24,6 +35,15 @@ const AboutRoom = ({ showRoom, onReady, isExiting }) => {
     const { camera } = useThree();
     const { isTeleporting, overlayContent } = useScene();
     const { showTutorial, unlockAchievement, hidePopup } = useAchievements();
+    const { globalVolume, isMuted } = useAudio();
+    const effectiveVolume = isMuted ? 0 : AUDIO_SETTINGS.volume * globalVolume;
+
+    const audioRef = useRef();
+    useEffect(() => {
+        if (audioRef.current && audioRef.current.setVolume) {
+            audioRef.current.setVolume(effectiveVolume);
+        }
+    }, [effectiveVolume]);
 
     // Use ref to track overlay state for event listeners (avoids stale closures)
     const overlayRef = useRef(overlayContent);
@@ -215,6 +235,17 @@ const AboutRoom = ({ showRoom, onReady, isExiting }) => {
 
     return (
         <group ref={roomRef} position={[0, 0, -25]}>
+            <PositionalAudio
+                ref={audioRef}
+                url="/sounds/szumwiatru.mp3"
+                distanceModel="exponential"
+                refDistance={AUDIO_SETTINGS.distance}
+                rolloffFactor={AUDIO_SETTINGS.rolloff}
+                loop
+                autoplay
+                volume={effectiveVolume}
+            />
+
             {/* === PAPER AIRPLANE (follows camera maneuvers) === */}
             <group ref={airplaneGroupRef} position={[0, -0.3, 1]}>
                 <PaperAirplane

@@ -1,12 +1,29 @@
 import { useRef, useState, useMemo, useEffect, forwardRef, useImperativeHandle } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
-import { Text, useTexture, Float } from '@react-three/drei';
+import { Text, useTexture, Float, PositionalAudio } from '@react-three/drei';
 import * as THREE from 'three';
 import gsap from 'gsap';
 import { useScene } from '../../../../context/SceneContext';
 import { useAchievements } from '../../../../context/AchievementsContext';
 import PaperMaterial from './PaperMaterial';
 import GalleryClouds from './GalleryClouds';
+import { useAudio } from '../../../../context/AudioManager';
+
+// ============================================
+// ⚙️ AUDIO SETTINGS - TWEAK HERE
+// Edytuj te wartości, aby zmienić głośność i zasięg słyszalności szumu miasta
+// ============================================
+export const AUDIO_SETTINGS = {
+    volume: 0.6,
+    distance: 2,
+    rolloff: 1.5
+};
+
+export const GALLERY_INTERACTION_AUDIO_SETTINGS = {
+    volume: 0.6,      // Volume for the paper clicking sound
+    distance: 2,      // Reference distance for spatial audio before it starts dropping off
+    rolloff: 2        // How fast the sound fades away (exponential)
+};
 
 // Define the unique projects and their textures
 const UNIQUE_PROJECTS = [
@@ -64,6 +81,16 @@ const RIGHT_CROP_AMOUNT = 0.2;
 const GalleryRoom = ({ showRoom, onReady, isExiting }) => {
     const { openOverlay, isTeleporting } = useScene();
     const { showTutorial, unlockAchievement, hidePopup } = useAchievements();
+    const { globalVolume, isMuted } = useAudio();
+    const effectiveVolume = isMuted ? 0 : AUDIO_SETTINGS.volume * globalVolume;
+
+    const audioRef = useRef();
+    useEffect(() => {
+        if (audioRef.current && audioRef.current.setVolume) {
+            audioRef.current.setVolume(effectiveVolume);
+        }
+    }, [effectiveVolume]);
+
     const groupRef = useRef();
     const [scrollOffset, setScrollOffset] = useState(0);
     const targetScroll = useRef(0);
@@ -346,6 +373,16 @@ const GalleryRoom = ({ showRoom, onReady, isExiting }) => {
 
     return (
         <group ref={groupRef}>
+            <PositionalAudio
+                ref={audioRef}
+                url="/sounds/szummiasta.mp3"
+                distanceModel="exponential"
+                refDistance={AUDIO_SETTINGS.distance}
+                rolloffFactor={AUDIO_SETTINGS.rolloff}
+                loop
+                autoplay
+                volume={effectiveVolume}
+            />
             <group position={[0, -0.7, -2]}>
                 {/* Floor */}
                 <mesh
@@ -584,10 +621,24 @@ const ProjectCard = forwardRef(({ index, project, clothespinTexture, currentScro
     const swaySpeed = useRef(Math.random() * 0.2 + 0.3); // Slower sway speed
     const swayOffset = useRef(Math.random() * 100);
 
+    // Audio Ref
+    const paperAudioRef = useRef();
+    const { globalVolume, isMuted } = useAudio();
+
+    const playPaperSound = () => {
+        if (paperAudioRef.current) {
+            const vol = isMuted ? 0 : GALLERY_INTERACTION_AUDIO_SETTINGS.volume * globalVolume;
+            paperAudioRef.current.setVolume(vol);
+            if (paperAudioRef.current.isPlaying) paperAudioRef.current.stop();
+            paperAudioRef.current.play();
+        }
+    };
+
     useImperativeHandle(ref, () => ({
         closeCard: () => {
             return new Promise((resolve) => {
                 setIsAnimating(true);
+                playPaperSound();
 
                 const timeline = gsap.timeline({
                     onComplete: () => {
@@ -666,6 +717,7 @@ const ProjectCard = forwardRef(({ index, project, clothespinTexture, currentScro
                 scrollToIndex(index, () => {
                     setIsScrolling(false);
                     setIsAnimating(true);
+                    playPaperSound();
 
                     const isMobile = window.innerWidth < 768;
                     const targetX_World = 0;
@@ -1119,6 +1171,15 @@ const ProjectCard = forwardRef(({ index, project, clothespinTexture, currentScro
                 >
                     {project.title}
                 </Text>
+
+                <PositionalAudio
+                    ref={paperAudioRef}
+                    url="/sounds/papersound.mp3"
+                    distanceModel="exponential"
+                    rolloffFactor={GALLERY_INTERACTION_AUDIO_SETTINGS.rolloff}
+                    refDistance={GALLERY_INTERACTION_AUDIO_SETTINGS.distance}
+                    loop={false}
+                />
             </group>
         </group>
     );

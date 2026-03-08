@@ -1,8 +1,18 @@
 import { useRef, useState, useMemo } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
-import { useTexture } from '@react-three/drei';
+import { useTexture, PositionalAudio } from '@react-three/drei';
 import * as THREE from 'three';
 import gsap from 'gsap';
+import { useAudio } from '../../../context/AudioManager';
+
+// Global settings for automatic segment doors audio
+export const SEGMENT_DOOR_AUDIO_SETTINGS = {
+    openVolume: 0.15, // Volume for "otwarciedrzwi"
+    closeVolume: 0.15,// Volume for "zamknieciedrzwi"
+    distance: 4,      // Reference distance for spatial audio
+    rolloff: 2,       // Dropoff factor
+    closeDelay: 0.5   // Seconds to wait before playing close sound
+};
 
 /**
  * SegmentDoors Component
@@ -20,7 +30,14 @@ const SegmentDoors = ({
     const leftHandleRef = useRef();
     const rightHandleRef = useRef();
     const isOpenRef = useRef(false);
+
+    // Audio Refs for 3D positional sound
+    const openAudioRef = useRef();
+    const closeAudioRef = useRef();
+    const closeAudioTimeoutRef = useRef(null);
+
     const { camera } = useThree();
+    const { globalVolume, isMuted } = useAudio();
 
     // Load textures
     // Note: User provided specific filenames in corridor/doors/
@@ -82,6 +99,16 @@ const SegmentDoors = ({
         if (distanceZ < openDistance && distanceX < 0.8 && !isOpenRef.current) {
             isOpenRef.current = true;
 
+            // Clear any pending close audio timeout
+            if (closeAudioTimeoutRef.current) clearTimeout(closeAudioTimeoutRef.current);
+
+            if (openAudioRef.current) {
+                const vol = isMuted ? 0 : SEGMENT_DOOR_AUDIO_SETTINGS.openVolume * globalVolume;
+                openAudioRef.current.setVolume(vol);
+                if (openAudioRef.current.isPlaying) openAudioRef.current.stop();
+                openAudioRef.current.play();
+            }
+
             // Animate Handles
             if (leftHandleRef.current) {
                 gsap.to(leftHandleRef.current.rotation, { z: 0.4, duration: 0.15, ease: 'power2.out' });
@@ -98,6 +125,17 @@ const SegmentDoors = ({
         // Close if user moves away in Z, OR if they move away in X (like flying sideways into a room)
         if ((distanceZ > closeDistance || distanceX > 1.5) && isOpenRef.current) {
             isOpenRef.current = false;
+
+            if (closeAudioRef.current) {
+                closeAudioTimeoutRef.current = setTimeout(() => {
+                    const vol = isMuted ? 0 : SEGMENT_DOOR_AUDIO_SETTINGS.closeVolume * globalVolume;
+                    if (closeAudioRef.current) {
+                        closeAudioRef.current.setVolume(vol);
+                        if (closeAudioRef.current.isPlaying) closeAudioRef.current.stop();
+                        closeAudioRef.current.play();
+                    }
+                }, SEGMENT_DOOR_AUDIO_SETTINGS.closeDelay * 1000);
+            }
 
             // Close Doors
             gsap.to(leftDoorRef.current.rotation, { y: 0, duration: 0.7, ease: 'power2.in' });
@@ -358,6 +396,23 @@ const SegmentDoors = ({
                 );
             })()}
 
+            {/* SPATIAL AUDIO NODES */}
+            <PositionalAudio
+                ref={openAudioRef}
+                url="/sounds/otwarciedrzwi.mp3"
+                distanceModel="exponential"
+                rolloffFactor={SEGMENT_DOOR_AUDIO_SETTINGS.rolloff}
+                refDistance={SEGMENT_DOOR_AUDIO_SETTINGS.distance}
+                loop={false}
+            />
+            <PositionalAudio
+                ref={closeAudioRef}
+                url="/sounds/zamknieciedrzwi.mp3"
+                distanceModel="exponential"
+                rolloffFactor={SEGMENT_DOOR_AUDIO_SETTINGS.rolloff}
+                refDistance={SEGMENT_DOOR_AUDIO_SETTINGS.distance}
+                loop={false}
+            />
         </group>
     );
 };
