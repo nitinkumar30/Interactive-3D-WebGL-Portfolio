@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
-import { useProgress } from '@react-three/drei';
+import * as THREE from 'three';
 import gsap from 'gsap';
 import { useAudio } from '../../context/AudioManager';
 
@@ -96,7 +96,44 @@ const percentageStyle = {
 
 const Preloader = ({ onComplete, ready }) => {
   const [isDone, setIsDone] = useState(false);
-  const { progress: realProgress, active } = useProgress();
+  
+  // Custom throttled progress state to prevent React 'Maximum update depth exceeded'
+  const [realProgress, setRealProgress] = useState(0);
+  const [active, setActive] = useState(true);
+
+  useEffect(() => {
+    let t = 0;
+    const origOnStart = THREE.DefaultLoadingManager.onStart;
+    const origOnProgress = THREE.DefaultLoadingManager.onProgress;
+    const origOnLoad = THREE.DefaultLoadingManager.onLoad;
+
+    THREE.DefaultLoadingManager.onStart = (url, loaded, total) => {
+      setActive(true);
+      origOnStart?.(url, loaded, total);
+    };
+
+    THREE.DefaultLoadingManager.onProgress = (url, loaded, total) => {
+      cancelAnimationFrame(t);
+      t = requestAnimationFrame(() => {
+        setRealProgress((loaded / total) * 100);
+      });
+      origOnProgress?.(url, loaded, total);
+    };
+
+    THREE.DefaultLoadingManager.onLoad = () => {
+      cancelAnimationFrame(t);
+      setRealProgress(100);
+      setActive(false);
+      origOnLoad?.();
+    };
+
+    return () => {
+      THREE.DefaultLoadingManager.onStart = origOnStart;
+      THREE.DefaultLoadingManager.onProgress = origOnProgress;
+      THREE.DefaultLoadingManager.onLoad = origOnLoad;
+    };
+  }, []);
+
   const { play } = useAudio();
   // Track audio handle to stop loop
   const pencilSoundRef = useRef(null);
@@ -208,7 +245,9 @@ const Preloader = ({ onComplete, ready }) => {
       duration: duration,
       ease: "power2.out",
       onUpdate: () => {
-        setDisplayProgress(val => Math.max(val, tracker.val));
+        // Prevent infinite loops by not using Math.max with set state inside an animation frame
+        // Just directly setting the animated value prevents infinite reactive triggers
+        setDisplayProgress(tracker.val);
       }
     });
 
@@ -223,6 +262,7 @@ const Preloader = ({ onComplete, ready }) => {
 
   useEffect(() => {
     if (displayProgress >= 99.5 && ready && !exitStarted.current) {
+      exitStarted.current = true; // Set this immediately to prevent repeated calls
       startExit();
     }
   }, [displayProgress, ready]);

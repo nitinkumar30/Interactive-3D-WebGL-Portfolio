@@ -6,7 +6,7 @@ const AchievementsPanel = ({ isOpen, onClose }) => {
     const { completed } = useAchievements();
 
     return (
-        <div className={`achievements-panel ${isOpen ? 'open' : ''}`} inert={!isOpen ? '' : undefined}>
+        <div className={`achievements-panel ${isOpen ? 'open' : ''}`} inert={!isOpen ? true : undefined}>
             <div className="achievements-card">
                 <div className="achievements-header">
                     <h3>ACHIEVEMENTS</h3>

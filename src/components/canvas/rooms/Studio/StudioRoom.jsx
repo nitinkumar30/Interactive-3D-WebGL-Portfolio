@@ -662,7 +662,7 @@ const MonitorBlock = ({ item, meshRef, isSelected, onClick, disabled }) => {
     const updatePaintState = useCallback(() => {
         if (!faceConfig) return;
 
-        const shouldPaint = isHoveredRef.current || isSelected;
+        const shouldPaint = !isTouch && (isHoveredRef.current || isSelected);
         const targetProgress = shouldPaint ? 1.0 : 0.0;
         const duration = shouldPaint ? 0.8 : 0.5;
 
@@ -690,7 +690,7 @@ const MonitorBlock = ({ item, meshRef, isSelected, onClick, disabled }) => {
                 if (paintedBoxRef.current) paintedBoxRef.current.visible = false;
             });
         }
-    }, [faceConfig, isSelected]);
+    }, [faceConfig, isSelected, isTouch]);
 
     // React to purely external changes (e.g., overlay closes and isSelected becomes false)
     useEffect(() => {

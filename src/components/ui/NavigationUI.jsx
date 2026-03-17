@@ -61,43 +61,51 @@ const NavigationUI = () => {
     useEffect(() => {
         // About (zone: left 10%, top 20%, width 30%, height 35%)
         // -> X: 10% to 40%, Y: 20% to 55%
-        gsap.to(paintedMapsRefs.about.current, {
-            clipPath: (hoveredRoom === 'about' || currentRoom === 'about')
-                ? 'polygon(10% 20%, 40% 20%, 40% 55%, 10% 55%)'
-                : 'polygon(10% 20%, 10% 20%, 10% 55%, 10% 55%)',
-            duration: 0.5,
-            ease: "power2.out"
-        });
+        if (paintedMapsRefs.about.current) {
+            gsap.to(paintedMapsRefs.about.current, {
+                clipPath: (hoveredRoom === 'about' || currentRoom === 'about')
+                    ? 'polygon(10% 20%, 40% 20%, 40% 55%, 10% 55%)'
+                    : 'polygon(10% 20%, 10% 20%, 10% 55%, 10% 55%)',
+                duration: 0.5,
+                ease: "power2.out"
+            });
+        }
 
         // Gallery (zone: left 10%, bottom 8%, width 30%, height 35%)
         // -> X: 10% to 40%, Y: 57% to 92% (since bottom=8% means top is 100-8-35=57%)
-        gsap.to(paintedMapsRefs.gallery.current, {
-            clipPath: (hoveredRoom === 'gallery' || currentRoom === 'gallery')
-                ? 'polygon(10% 57%, 40% 57%, 40% 92%, 10% 92%)'
-                : 'polygon(10% 57%, 10% 57%, 10% 92%, 10% 92%)',
-            duration: 0.5,
-            ease: "power2.out"
-        });
+        if (paintedMapsRefs.gallery.current) {
+            gsap.to(paintedMapsRefs.gallery.current, {
+                clipPath: (hoveredRoom === 'gallery' || currentRoom === 'gallery')
+                    ? 'polygon(10% 57%, 40% 57%, 40% 92%, 10% 92%)'
+                    : 'polygon(10% 57%, 10% 57%, 10% 92%, 10% 92%)',
+                duration: 0.5,
+                ease: "power2.out"
+            });
+        }
 
         // Contact (zone: right 5%, top 10%, width 35%, height 25%)
         // -> X: 60% to 95% (since right=5% means left is 100-5-35=60%), Y: 10% to 35%
-        gsap.to(paintedMapsRefs.contact.current, {
-            clipPath: (hoveredRoom === 'contact' || currentRoom === 'contact')
-                ? 'polygon(60% 10%, 95% 10%, 95% 35%, 60% 35%)'
-                : 'polygon(95% 10%, 95% 10%, 95% 35%, 95% 35%)',
-            duration: 0.5,
-            ease: "power2.out"
-        });
+        if (paintedMapsRefs.contact.current) {
+            gsap.to(paintedMapsRefs.contact.current, {
+                clipPath: (hoveredRoom === 'contact' || currentRoom === 'contact')
+                    ? 'polygon(60% 10%, 95% 10%, 95% 35%, 60% 35%)'
+                    : 'polygon(95% 10%, 95% 10%, 95% 35%, 95% 35%)',
+                duration: 0.5,
+                ease: "power2.out"
+            });
+        }
 
         // Studio (zone: right 15%, bottom 19%, width 25%, height 40%)
         // -> X: 60% to 85% (since right=15% means left is 100-15-25=60%), Y: 41% to 81% (since bottom=19% means top is 100-19-40=41%)
-        gsap.to(paintedMapsRefs.studio.current, {
-            clipPath: (hoveredRoom === 'studio' || currentRoom === 'studio')
-                ? 'polygon(60% 41%, 85% 41%, 85% 81%, 60% 81%)'
-                : 'polygon(85% 41%, 85% 41%, 85% 81%, 85% 81%)',
-            duration: 0.5,
-            ease: "power2.out"
-        });
+        if (paintedMapsRefs.studio.current) {
+            gsap.to(paintedMapsRefs.studio.current, {
+                clipPath: (hoveredRoom === 'studio' || currentRoom === 'studio')
+                    ? 'polygon(60% 41%, 85% 41%, 85% 81%, 60% 81%)'
+                    : 'polygon(85% 41%, 85% 41%, 85% 81%, 85% 81%)',
+                duration: 0.5,
+                ease: "power2.out"
+            });
+        }
     }, [hoveredRoom, currentRoom]);
 
     useEffect(() => {
@@ -280,7 +288,7 @@ const NavigationUI = () => {
 
             {/* Map Panel - Drops from top when open */}
             {hasEntered && (
-                <div className={`map-panel ${isMenuOpen ? 'open' : ''}`} inert={!isMenuOpen ? '' : undefined} ref={mapPanelRef} onKeyDown={handleMapKeyDown} role="dialog" aria-label="Map">
+                <div className={`map-panel ${isMenuOpen ? 'open' : ''}`} inert={!isMenuOpen ? true : undefined} ref={mapPanelRef} onKeyDown={handleMapKeyDown} role="dialog" aria-label="Map">
                     {/* SVG Border Overlay */}
                     <svg
                         className="map-border-overlay"
@@ -421,7 +429,7 @@ const NavigationUI = () => {
 
             {/* Audio Panel — drops down from the button */}
             {hasEntered && (
-                <div className={`audio-panel ${isAudioMenuOpen ? 'open' : ''}`} inert={!isAudioMenuOpen ? '' : undefined}>
+                <div className={`audio-panel ${isAudioMenuOpen ? 'open' : ''}`} inert={!isAudioMenuOpen ? true : undefined}>
                     <div className="audio-card">
                         <div className="audio-header">
                             <h3>AUDIO SETTINGS</h3>
