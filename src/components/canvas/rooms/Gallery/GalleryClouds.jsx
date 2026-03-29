@@ -112,7 +112,7 @@ const StaticCloud = ({ position, scale, opacity, textureIndex, driftSpeed, initi
     return (
         <mesh ref={meshRef} position={position}>
             <planeGeometry args={[width, height]} />
-            <meshBasicMaterial
+            <meshBasicMaterial color="#e0e0e0"
                 map={texture}
                 transparent
                 opacity={opacity}

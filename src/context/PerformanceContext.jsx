@@ -20,7 +20,7 @@ const SETTINGS = {
     particleCount: 1.0, // 100% particles
   },
   [TIERS.MEDIUM]: {
-    dpr: [1, 1.2], // Cap at 1.2x on mobile to save GPU fillrate
+    dpr: [1, 1.5], // Cap at 1.5x on mobile to balance quality and GPU fillrate
     shadows: false, // Disable shadows for better mobile performance
     antialias: true,
     powerPreference: "default",
@@ -29,7 +29,7 @@ const SETTINGS = {
     particleCount: 0.6, // 60% particles
   },
   [TIERS.LOW]: {
-    dpr: 0.75, // Fixed 0.75x pixel density for weakest devices
+    dpr: [0.8, 1], // Minimum 0.8x pixel density to avoid extreme pixelation
     shadows: false, // Disable shadows completely
     antialias: false, // Disable AA to maximize FPS
     powerPreference: "low-power",
@@ -75,10 +75,7 @@ export const PerformanceProvider = ({ children }) => {
         detectedTier = TIERS.LOW;
       }
       
-      // Additional heuristic: small screen on mobile usually means older phone
-      if (isMobile && window.innerWidth < 450) {
-        detectedTier = TIERS.LOW;
-      }
+      // Removed small screen heuristic because modern phones have CSS width < 430px (e.g. iPhone 15 Pro Max is 430px)
 
       console.log(
         `[Performance] Detected Tier: ${detectedTier} | Cores: ${navigator.hardwareConcurrency} | Mobile: ${isMobile}`

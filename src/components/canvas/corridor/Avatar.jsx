@@ -124,7 +124,7 @@ const Avatar = ({ position = [10, -20, 30] }) => {
         <group ref={groupRef} position={position}>
             <mesh ref={meshRef}>
                 <planeGeometry args={[dimensions.width, dimensions.height]} />
-                <meshBasicMaterial
+                <meshBasicMaterial color="#ffffff"
                     transparent={true}
                     side={THREE.DoubleSide}
                     depthWrite={false}

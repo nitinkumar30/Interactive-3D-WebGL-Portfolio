@@ -3,8 +3,8 @@ import * as THREE from 'three';
 import gsap from 'gsap';
 import { useAudio } from '../../context/AudioManager';
 
-// Reusable SVG Line Component
-const TearLineSVG = ({ svgPathData, pathLength, strokeDashoffset }) => (
+// Reusable SVG Line Component (now accepts ref)
+const TearLineSVG = ({ svgPathData, pathLength, strokeDashoffset, pathRef }) => (
   <svg
     className="preloader__overlay"
     viewBox="0 0 100 100"
@@ -12,6 +12,7 @@ const TearLineSVG = ({ svgPathData, pathLength, strokeDashoffset }) => (
     style={{ pointerEvents: 'none' }}
   >
     <path
+      ref={pathRef}
       d={svgPathData}
       fill="none"
       stroke="#1a1a1a"
@@ -96,7 +97,7 @@ const percentageStyle = {
 
 const Preloader = ({ onComplete, ready }) => {
   const [isDone, setIsDone] = useState(false);
-  
+
   // Custom throttled progress state to prevent React 'Maximum update depth exceeded'
   const [realProgress, setRealProgress] = useState(0);
   const [active, setActive] = useState(true);
@@ -142,10 +143,18 @@ const Preloader = ({ onComplete, ready }) => {
   const containerRef = useRef(null);
   const leftHalfRef = useRef(null);
   const rightHalfRef = useRef(null);
+  const pathLeftRef = useRef(null);
+  const pathRightRef = useRef(null);
+  const textLeftRef = useRef(null);
+  const textRightRef = useRef(null);
 
-  // Track visual progress
+  // Track visual progress entirely in refs to skip React renders 60x/sec!
   const [targetProgress, setTargetProgress] = useState(0);
-  const [displayProgress, setDisplayProgress] = useState(0);
+  const displayProgressRef = useRef(0);
+  const trackerRef = useRef({ val: 0 });
+  const readyRef = useRef(ready);
+
+  useEffect(() => { readyRef.current = ready; }, [ready]);
 
   // ----------------------------------------
   // GENERATE TEAR PATH
@@ -204,28 +213,35 @@ const Preloader = ({ onComplete, ready }) => {
     setTargetProgress(prev => Math.max(prev, newTarget));
   }, [realProgress, active, ready]);
 
-  // Handle Pencil Sound
-  useEffect(() => {
-    if (displayProgress < 99 && !pencilSoundRef.current) {
+  // Handle Pencil Sound & Exit checking dynamically
+  const checkProgressTriggers = (val) => {
+    // Pencil Sound
+    if (val < 99 && !pencilSoundRef.current) {
       pencilSoundRef.current = play('pencil', { loop: true, volume: 0.5 });
     }
-    else if (displayProgress >= 99 && pencilSoundRef.current) {
+    else if (val >= 99 && pencilSoundRef.current) {
       pencilSoundRef.current.stop();
       pencilSoundRef.current = null;
     }
 
+    // Exit phase
+    if (val >= 99.5 && readyRef.current && !exitStarted.current) {
+      exitStarted.current = true;
+      startExit();
+    }
+  };
+
+  useEffect(() => {
     return () => {
       if (pencilSoundRef.current) {
         pencilSoundRef.current.stop();
         pencilSoundRef.current = null;
       }
     };
-  }, [displayProgress, play]);
+  }, []);
 
   useEffect(() => {
-    const tracker = { val: displayProgress };
-    const distance = targetProgress - displayProgress;
-
+    const distance = targetProgress - displayProgressRef.current;
     let duration = 0.5;
 
     if (distance > 60) {
@@ -238,20 +254,29 @@ const Preloader = ({ onComplete, ready }) => {
       duration = 0.4;
     }
 
-    gsap.killTweensOf(tracker);
-
-    gsap.to(tracker, {
+    gsap.to(trackerRef.current, {
       val: targetProgress,
       duration: duration,
       ease: "power2.out",
+      overwrite: true, // Auto kill previous tweens on trackerRef
       onUpdate: () => {
-        // Prevent infinite loops by not using Math.max with set state inside an animation frame
-        // Just directly setting the animated value prevents infinite reactive triggers
-        setDisplayProgress(tracker.val);
+        const val = trackerRef.current.val;
+        displayProgressRef.current = val;
+
+        const safeProgress = Math.min(100, Math.max(0, val));
+        const strokeDashoffset = 120 - (120 * safeProgress) / 100;
+        const percentageText = `${Math.round(safeProgress)}%`;
+
+        // Direct DOM manipulation - BYPASS React Render!
+        if (textLeftRef.current) textLeftRef.current.innerText = percentageText;
+        if (textRightRef.current) textRightRef.current.innerText = percentageText;
+        if (pathLeftRef.current) pathLeftRef.current.style.strokeDashoffset = strokeDashoffset;
+        if (pathRightRef.current) pathRightRef.current.style.strokeDashoffset = strokeDashoffset;
+
+        checkProgressTriggers(val);
       }
     });
 
-    return () => gsap.killTweensOf(tracker);
   }, [targetProgress]);
 
 
@@ -260,12 +285,13 @@ const Preloader = ({ onComplete, ready }) => {
   // ----------------------------------------
   const exitStarted = useRef(false);
 
+  // Fallback trigger if ready becomes true AFTER 99.5% reached
   useEffect(() => {
-    if (displayProgress >= 99.5 && ready && !exitStarted.current) {
-      exitStarted.current = true; // Set this immediately to prevent repeated calls
+    if (displayProgressRef.current >= 99.5 && ready && !exitStarted.current) {
+      exitStarted.current = true;
       startExit();
     }
-  }, [displayProgress, ready]);
+  }, [ready]);
 
   const startExit = () => {
     exitStarted.current = true;
@@ -311,7 +337,8 @@ const Preloader = ({ onComplete, ready }) => {
   if (isDone) return null;
 
   const pathLength = 120;
-  const safeProgress = Math.min(100, Math.max(0, displayProgress));
+  // Initialize values
+  const safeProgress = Math.min(100, Math.max(0, displayProgressRef.current));
   const strokeDashoffset = pathLength - (pathLength * safeProgress) / 100;
   const percentageText = `${Math.round(safeProgress)}%`;
 
@@ -325,12 +352,12 @@ const Preloader = ({ onComplete, ready }) => {
       >
         {/* Content: Percentage & Line */}
         <div className="preloader__percentage" style={percentageStyle}>
-          {percentageText}
+          <span ref={textLeftRef}>{percentageText}</span>
           <RingLoader />
         </div>
 
         {/* SVG is now INSIDE the clipped half */}
-        <TearLineSVG svgPathData={svgPathData} pathLength={pathLength} strokeDashoffset={strokeDashoffset} />
+        <TearLineSVG pathRef={pathLeftRef} svgPathData={svgPathData} pathLength={pathLength} strokeDashoffset={strokeDashoffset} />
       </div>
 
       {/* RIGHT HALF */}
@@ -341,12 +368,12 @@ const Preloader = ({ onComplete, ready }) => {
       >
         {/* Content: Percentage & Line */}
         <div className="preloader__percentage" style={percentageStyle}>
-          {percentageText}
+          <span ref={textRightRef}>{percentageText}</span>
           <RingLoader />
         </div>
 
         {/* SVG is now INSIDE the clipped half */}
-        <TearLineSVG svgPathData={svgPathData} pathLength={pathLength} strokeDashoffset={strokeDashoffset} />
+        <TearLineSVG pathRef={pathRightRef} svgPathData={svgPathData} pathLength={pathLength} strokeDashoffset={strokeDashoffset} />
       </div>
     </div>
   );

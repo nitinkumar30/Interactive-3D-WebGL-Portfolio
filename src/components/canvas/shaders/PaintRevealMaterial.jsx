@@ -11,7 +11,7 @@ import { extend } from '@react-three/fiber';
  * Usage: <paintRevealMaterial map={sketchTex} uMapPainted={paintedTex} uProgress={0-1} />
  * As uProgress goes from 0→1, pixels transition from sketch to painted with noisy edges.
  */
-class PaintRevealMaterial extends THREE.MeshStandardMaterial {
+class PaintRevealMaterial extends THREE.MeshBasicMaterial {
     constructor(params = {}) {
         // Extract custom params before passing to super
         const { uMapPainted, ...standardParams } = params;

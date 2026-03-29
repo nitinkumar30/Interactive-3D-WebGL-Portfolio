@@ -60,7 +60,7 @@ const PictureContent = ({ imagePath, imagePaintedPath, width, height, isPainted 
             {imagePaintedPath && (
                 <mesh position={[0, 0, -0.001]}>
                     <planeGeometry args={[width, height]} />
-                    <meshStandardMaterial
+                    <meshBasicMaterial color="#e0e0e0"
                         map={paintedTexture}
                         transparent={true}
                         alphaTest={0.5}
@@ -72,7 +72,7 @@ const PictureContent = ({ imagePath, imagePaintedPath, width, height, isPainted 
             <mesh position={[0, 0, 0]}>
                 <planeGeometry args={[width, height]} />
                 {imagePaintedPath ? (
-                    <revealMaterial
+                    <revealMaterial color="#e0e0e0"
                         ref={materialRef}
                         map={texture}
                         transparent={true}
@@ -82,7 +82,7 @@ const PictureContent = ({ imagePath, imagePaintedPath, width, height, isPainted 
                         uProgress={0.0}
                     />
                 ) : (
-                    <meshStandardMaterial
+                    <meshBasicMaterial color="#e0e0e0"
                         map={texture}
                         transparent={true}
                         alphaTest={0.1} // KLUCZOWE: Naprawia przezroczystość (wycina tło)
@@ -255,14 +255,14 @@ const InspectableFrame = ({ frame, wallX, frameTexture, framePaintedTexture, CAB
                 }}
             >
                 <planeGeometry args={[frame.width, frame.height]} />
-                <meshBasicMaterial transparent opacity={0} depthWrite={false} />
+                <meshBasicMaterial color="#e0e0e0" transparent opacity={0} depthWrite={false} />
             </mesh>
 
             {/* RAMKA PAINTED (behind sketch) */}
             {!isTouch && (
                 <mesh ref={framePaintedRef} position={[0, 0, -0.001]} scale={[0.98, 0.98, 1]}>
                     <planeGeometry args={[frame.width, frame.height]} />
-                    <meshStandardMaterial
+                    <meshBasicMaterial color="#e0e0e0"
                         map={framePaintedTexture}
                         transparent={true}
                         alphaTest={0.5}
@@ -275,7 +275,7 @@ const InspectableFrame = ({ frame, wallX, frameTexture, framePaintedTexture, CAB
             {/* RAMKA SKETCH OVERLAY (front) */}
             <mesh position={[0, 0, 0]}>
                 <planeGeometry args={[frame.width, frame.height]} />
-                <revealMaterial
+                <revealMaterial color="#e0e0e0"
                     ref={frameMaterialRef}
                     map={frameTexture}
                     transparent={true}
@@ -471,29 +471,29 @@ const CorridorDecorations = ({ segmentLength, zOffset, corridorWidth = 4, corrid
                             <boxGeometry args={[2.0, 0.06, 0.5]} />
 
                             {/* Short sides (Right/Left) */}
-                            <meshStandardMaterial attach="material-0" color="#e8e8e8" roughness={0.6} />
-                            <meshStandardMaterial attach="material-1" color="#e8e8e8" roughness={0.6} />
+                            <meshBasicMaterial attach="material-0" color="#e8e8e8" roughness={0.6} />
+                            <meshBasicMaterial attach="material-1" color="#e8e8e8" roughness={0.6} />
 
                             {/* Top (Hidden) */}
-                            <meshStandardMaterial attach="material-2" color="#d0d0d0" roughness={0.8} />
+                            <meshBasicMaterial attach="material-2" color="#d0d0d0" roughness={0.8} />
 
                             {/* Bottom - Grille Texture 
                                 Używamy przezroczystości, żeby odsłonić wewnętrzne światło.
                                 Sama krata jest ciemna/metaliczna.
                             */}
-                            <meshStandardMaterial
+                            <meshBasicMaterial
                                 attach="material-3"
                                 map={lampGrilleTexture}
                                 transparent={true}
                                 alphaTest={0.1}
                                 side={THREE.DoubleSide}
-                                color="#ffffff"
+                                color="#e0e0e0"
                                 roughness={0.5}
                             />
 
                             {/* Long sides (Front/Back) - Side Texture */}
-                            <meshStandardMaterial attach="material-4" map={lampSideTexture} roughness={0.6} />
-                            <meshStandardMaterial attach="material-5" map={lampSideTexture} roughness={0.6} />
+                            <meshBasicMaterial color="#e0e0e0" attach="material-4" map={lampSideTexture} roughness={0.6} />
+                            <meshBasicMaterial color="#e0e0e0" attach="material-5" map={lampSideTexture} roughness={0.6} />
                         </mesh>
 
                         {/* WEWNĘTRZNE ŚWIATŁO (LIGHT PANEL) 
@@ -505,20 +505,20 @@ const CorridorDecorations = ({ segmentLength, zOffset, corridorWidth = 4, corrid
                         >
                             <planeGeometry args={[1.9, 0.4]} />
                             <meshBasicMaterial
-                                color="#ffffff"
+                                color="#e0e0e0"
                                 toneMapped={false}
                                 side={THREE.DoubleSide}
                             />
                         </mesh>
 
-                        {/* RZECZYWISTE ŹRÓDŁO ŚWIATŁA (PointLight) */}
-                        <pointLight
+                        {/* RZECZYWISTE ŹRÓDŁO ŚWIATŁA (PointLight) - WYLACZONE */}
+                        {/* <pointLight
                             position={[0, -1.5, 0]}
                             distance={6}
                             intensity={0.8}
                             color="#ffffff"
                             decay={2}
-                        />
+                        /> */}
                     </group>
                 );
             })}
@@ -534,19 +534,19 @@ const CorridorDecorations = ({ segmentLength, zOffset, corridorWidth = 4, corrid
                 ].map((pos, i) => (
                     <mesh key={`leg-${i}`} position={[pos[0], tableConfig.height / 2, pos[1]]}>
                         <boxGeometry args={[tableConfig.legRadius * 2, tableConfig.height, tableConfig.legRadius * 2]} />
-                        <meshStandardMaterial map={legTexture} roughness={0.8} />
+                        <meshBasicMaterial color="#e0e0e0" map={legTexture} roughness={0.8} />
                     </mesh>
                 ))}
 
                 {/* Blat stolika */}
                 <mesh position={[0, tableConfig.height + tableConfig.topThickness / 2, 0]}>
                     <boxGeometry args={[tableConfig.width, tableConfig.topThickness, tableConfig.depth]} />
-                    <meshStandardMaterial attach="material-0" map={woodTexture} /> {/* Right */}
-                    <meshStandardMaterial attach="material-1" map={woodTexture} /> {/* Left */}
-                    <meshStandardMaterial attach="material-2" map={tableTopTexture} roughness={0.5} /> {/* Top */}
-                    <meshStandardMaterial attach="material-3" color="#ffffff" />   {/* Bottom */}
-                    <meshStandardMaterial attach="material-4" map={woodTexture} /> {/* Front */}
-                    <meshStandardMaterial attach="material-5" map={woodTexture} /> {/* Back */}
+                    <meshBasicMaterial color="#e0e0e0" attach="material-0" map={woodTexture} /> {/* Right */}
+                    <meshBasicMaterial color="#e0e0e0" attach="material-1" map={woodTexture} /> {/* Left */}
+                    <meshBasicMaterial color="#e0e0e0" attach="material-2" map={tableTopTexture} roughness={0.5} /> {/* Top */}
+                    <meshBasicMaterial attach="material-3" color="#e0e0e0" />   {/* Bottom */}
+                    <meshBasicMaterial color="#e0e0e0" attach="material-4" map={woodTexture} /> {/* Front */}
+                    <meshBasicMaterial color="#e0e0e0" attach="material-5" map={woodTexture} /> {/* Back */}
                 </mesh>
 
                 {/* KWIATEK NA STOLE */}
@@ -555,7 +555,7 @@ const CorridorDecorations = ({ segmentLength, zOffset, corridorWidth = 4, corrid
                     rotation={[0, -Math.PI / 4, 0]} // Lekki obrót
                 >
                     <planeGeometry args={[0.3, 0.4]} />
-                    <meshStandardMaterial
+                    <meshBasicMaterial color="#e0e0e0"
                         map={flowerTexture}
                         transparent={true}
                         alphaTest={0.1}
@@ -605,12 +605,12 @@ const CorridorDecorations = ({ segmentLength, zOffset, corridorWidth = 4, corrid
                     4: Front (+z) -> szafkaprzodgora.png (side)
                     5: Back (-z) -> szafkaprzodgora.png (side)
                 */}
-                <meshStandardMaterial attach="material-0" map={cabinetRestTexture} />
-                <meshStandardMaterial attach="material-1" map={cabinetFrontTexture} />
-                <meshStandardMaterial attach="material-2" map={cabinetRestTexture} />
-                <meshStandardMaterial attach="material-3" map={cabinetRestTexture} />
-                <meshStandardMaterial attach="material-4" map={cabinetRestTexture} />
-                <meshStandardMaterial attach="material-5" map={cabinetRestTexture} />
+                <meshBasicMaterial color="#e0e0e0" attach="material-0" map={cabinetRestTexture} />
+                <meshBasicMaterial color="#e0e0e0" attach="material-1" map={cabinetFrontTexture} />
+                <meshBasicMaterial color="#e0e0e0" attach="material-2" map={cabinetRestTexture} />
+                <meshBasicMaterial color="#e0e0e0" attach="material-3" map={cabinetRestTexture} />
+                <meshBasicMaterial color="#e0e0e0" attach="material-4" map={cabinetRestTexture} />
+                <meshBasicMaterial color="#e0e0e0" attach="material-5" map={cabinetRestTexture} />
             </mesh>
 
             {/* === STOJĄCA RAMKA NA SZAFCE (STANDING FRAME) === */}
@@ -620,7 +620,7 @@ const CorridorDecorations = ({ segmentLength, zOffset, corridorWidth = 4, corrid
                 rotation={[0, -Math.PI / 2 + 0.2, 0]} // Lekki obrót, żeby nie stała idealnie prosto
             >
                 <planeGeometry args={[0.3, 0.4]} />
-                <meshStandardMaterial
+                <meshBasicMaterial color="#e0e0e0"
                     map={standingFrameTexture}
                     transparent={true}
                     alphaTest={0.1}
@@ -637,7 +637,7 @@ const CorridorDecorations = ({ segmentLength, zOffset, corridorWidth = 4, corrid
                 rotation={[0, Math.PI / 4, 0]} // Obrócone w stronę korytarza (z lewej)
             >
                 <planeGeometry args={[1.8, 3]} />
-                <meshStandardMaterial
+                <meshBasicMaterial color="#e0e0e0"
                     map={treeTexture}
                     transparent={true}
                     alphaTest={0.1}
@@ -663,7 +663,7 @@ const CorridorDecorations = ({ segmentLength, zOffset, corridorWidth = 4, corrid
                         rotation={[0, grateSide === 'left' ? Math.PI / 2 : -Math.PI / 2, 0]}
                     >
                         <planeGeometry args={[0.8, 0.5]} />
-                        <meshStandardMaterial
+                        <meshBasicMaterial color="#e0e0e0"
                             map={grateTexture}
                             transparent={true}
                             alphaTest={0.1}

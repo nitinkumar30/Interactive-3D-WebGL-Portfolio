@@ -5,6 +5,7 @@ import InfiniteCorridorManager from './corridor/InfiniteCorridorManager';
 import EntranceDoors from './entrance/EntranceDoors';
 import EmptyCorridor from './entrance/EmptyCorridor';
 import TeleportRoom from './corridor/TeleportRoom';
+import RoomWarmup from './corridor/RoomWarmup';
 import useInfiniteCamera from '../../hooks/useInfiniteCamera';
 import SignSystem from './entrance/SignSystem';
 import { useScene } from '../../context/SceneContext';
@@ -29,11 +30,6 @@ const Experience = ({ isLoaded, onSceneReady, performanceTier }) => {
     const { hasEntered, markEntered, enterRoom, isTeleporting, isInRoom, pendingDoorClick } = useScene();
 
     const { camera } = useThree();
-
-    // Signal ready on mount (after texture load + initial render)
-    useEffect(() => {
-        onSceneReady?.();
-    }, [onSceneReady]);
 
     // Camera control - both scroll and parallax only work after entering
     // Disable during teleporting to prevent scroll interference
@@ -68,16 +64,22 @@ const Experience = ({ isLoaded, onSceneReady, performanceTier }) => {
 
     return (
         <>
+            {/* === ROOM WARM-UP (pre-renders all rooms off-screen during preloader) === */}
+            {/* RoomWarmup mounts all 4 rooms 500 units below, compiles shaders via gl.compile(), 
+                then self-destructs and signals onSceneReady. This ensures both corridor segments
+                AND room shaders are pre-compiled before the user starts interacting. */}
+            <RoomWarmup onWarmupComplete={onSceneReady} />
+
             {/* === GLOBAL LIGHTING === */}
-            <ambientLight intensity={isLowTier ? 2.5 : 2.2} />
-            <directionalLight
+            {/* <ambientLight intensity={isLowTier ? 2.5 : 2.2} /> */}
+            {/* <directionalLight
                 position={[5, 10, 5]}
                 intensity={0.8}
                 color="#acacac"
                 castShadow={!isLowTier}
                 shadow-mapSize={[1024, 1024]}
-            />
-            <directionalLight position={[-5, 8, -10]} intensity={0.4} color="#ffffff" />
+            /> */}
+            {/* <directionalLight position={[-5, 8, -10]} intensity={0.4} color="#ffffff" /> */}
 
             {/* === EMPTY CORRIDOR (provides context during entrance) === */}
             {!hasEntered && (
@@ -112,3 +114,4 @@ const Experience = ({ isLoaded, onSceneReady, performanceTier }) => {
 };
 
 export default Experience;
+

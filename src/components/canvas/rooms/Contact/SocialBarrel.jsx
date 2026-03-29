@@ -96,7 +96,7 @@ const SocialBarrel = ({ position, rotation = [0, 0, 0], texturePath, label, onCl
             {/* Painted Layer (Behind) */}
             <mesh ref={paintedRef} position={[0, 0, -0.001]} visible={false}>
                 <planeGeometry args={scale} />
-                <meshBasicMaterial
+                <meshBasicMaterial color="#e0e0e0"
                     map={texturePainted}
                     transparent={true}
                     alphaTest={0.5}
@@ -107,7 +107,7 @@ const SocialBarrel = ({ position, rotation = [0, 0, 0], texturePath, label, onCl
             {/* Sketch overlay (Front) - brush-stroke discard reveals painted beneath */}
             <mesh position={[0, 0, 0]}>
                 <planeGeometry args={scale} />
-                <revealMaterial
+                <revealMaterial color="#e0e0e0"
                     ref={materialRef}
                     map={texture}
                     transparent={true}

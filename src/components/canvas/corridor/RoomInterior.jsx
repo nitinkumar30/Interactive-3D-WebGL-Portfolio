@@ -85,29 +85,28 @@ const RoomInterior = memo(({ label, showRoom, onReady, isExiting }) => {
         bbRight.repeat.set(corridorDepth / NATURAL_TILE_W, 1);
 
         return {
-            corridorFloor: new THREE.MeshStandardMaterial({ map: floorTex, roughness: 1, metalness: 0, side: THREE.DoubleSide }),
-            corridorWallL: new THREE.MeshStandardMaterial({ map: wallTexL, roughness: 0.95, side: THREE.DoubleSide }),
-            corridorWallR: new THREE.MeshStandardMaterial({ map: wallTexR, roughness: 0.95, side: THREE.DoubleSide }),
-            corridorCeiling: new THREE.MeshStandardMaterial({ map: ceilTex, roughness: 0.9, side: THREE.DoubleSide }),
-            bbLeft: new THREE.MeshStandardMaterial({ map: bbLeft, roughness: 0.8, side: THREE.DoubleSide }),
-            bbRight: new THREE.MeshStandardMaterial({ map: bbRight, roughness: 0.8, side: THREE.DoubleSide }),
-            threshold: new THREE.MeshStandardMaterial({
+            corridorFloor: new THREE.MeshBasicMaterial({ color: '#e0e0e0',  map: floorTex, roughness: 1, metalness: 0, side: THREE.DoubleSide }),
+            corridorWallL: new THREE.MeshBasicMaterial({ color: '#e0e0e0',  map: wallTexL, roughness: 0.95, side: THREE.DoubleSide }),
+            corridorWallR: new THREE.MeshBasicMaterial({ color: '#e0e0e0',  map: wallTexR, roughness: 0.95, side: THREE.DoubleSide }),
+            corridorCeiling: new THREE.MeshBasicMaterial({ color: '#e0e0e0',  map: ceilTex, roughness: 0.9, side: THREE.DoubleSide }),
+            bbLeft: new THREE.MeshBasicMaterial({ color: '#e0e0e0',  map: bbLeft, roughness: 0.8, side: THREE.DoubleSide }),
+            bbRight: new THREE.MeshBasicMaterial({ color: '#e0e0e0',  map: bbRight, roughness: 0.8, side: THREE.DoubleSide }),
+            threshold: new THREE.MeshBasicMaterial({ color: '#e0e0e0', 
                 map: (() => {
                     const t = bbTexSrc.clone();
                     t.needsUpdate = true;
                     t.wrapS = t.wrapT = THREE.RepeatWrapping;
                     t.repeat.set(corridorWidth / NATURAL_TILE_W, 1);
-                    return t;
-                })(),
+                    return t; })(),
                 roughness: 0.9,
                 metalness: 0,
                 side: THREE.DoubleSide
             }),
             // Room materials (keep flat for rooms that have their own content)
-            roomFloor: new THREE.MeshStandardMaterial({ color: '#e5e5e5', roughness: 0.95, side: THREE.DoubleSide }),
-            roomCeiling: new THREE.MeshStandardMaterial({ color: '#fafafa', roughness: 0.9, side: THREE.DoubleSide }),
-            roomWall: new THREE.MeshStandardMaterial({ color: '#f0f0f0', roughness: 0.9, side: THREE.DoubleSide }),
-            roomBackWall: new THREE.MeshStandardMaterial({ color: '#f5f5f5', roughness: 0.9, side: THREE.DoubleSide }),
+            roomFloor: new THREE.MeshBasicMaterial({ color: '#e5e5e5', roughness: 0.95, side: THREE.DoubleSide }),
+            roomCeiling: new THREE.MeshBasicMaterial({ color: '#fafafa', roughness: 0.9, side: THREE.DoubleSide }),
+            roomWall: new THREE.MeshBasicMaterial({ color: '#f0f0f0', roughness: 0.9, side: THREE.DoubleSide }),
+            roomBackWall: new THREE.MeshBasicMaterial({ color: '#f5f5f5', roughness: 0.9, side: THREE.DoubleSide }),
         };
     }, [floorTexSrc, wallTexSrc, ceilingTexSrc, bbTexSrc]);
 
@@ -296,9 +295,9 @@ const RoomInterior = memo(({ label, showRoom, onReady, isExiting }) => {
                                 {SUBTITLES[label] || ''}
                             </Text>
 
-                            {/* Lighting */}
-                            <pointLight position={[0, roomHeight / 2 - 2, 0]} intensity={1} distance={40} color="#ffffff" />
-                            <pointLight position={[0, 0, -roomDepth / 4]} intensity={0.5} distance={30} color="#fffaf0" />
+                            {/* Lighting - WYLACZONE */}
+                            {/* <pointLight position={[0, roomHeight / 2 - 2, 0]} intensity={1} distance={40} color="#ffffff" /> */}
+                            {/* <pointLight position={[0, 0, -roomDepth / 4]} intensity={0.5} distance={30} color="#fffaf0" /> */}
                         </group>
                     )}
                 </group>

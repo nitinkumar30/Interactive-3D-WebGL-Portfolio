@@ -163,7 +163,7 @@ const Cloud = ({
     return (
         <mesh ref={meshRef} position={position}>
             <planeGeometry args={[width, height]} />
-            <meshBasicMaterial
+            <meshBasicMaterial color="#e0e0e0"
                 ref={materialRef}
                 map={texture}
                 transparent

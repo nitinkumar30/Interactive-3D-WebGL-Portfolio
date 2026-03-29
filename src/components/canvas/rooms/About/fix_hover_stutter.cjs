@@ -23,13 +23,13 @@ content = content.replace(
 );
 
 content = content.replace(
-    /return \(\s+<group ref=\{meshRef\} position=\{position\}>\s+\{\/\* Painted button \(behind\) - hidden until hover \*\/\}\s+<mesh ref=\{paintedRef\} position=\{\[0, 0, -0\.001\]\} visible=\{false\}>\s+<planeGeometry args=\{\[width, height\]\} \/>\s+<meshBasicMaterial\s+map=\{paintedTexture\}\s+transparent\s+side=\{THREE\.DoubleSide\}\s+alphaTest=\{0\.5\}\s+depthWrite=\{false\}\s+\/>\s+<\/mesh>/g,
+    /return \(\s+<group ref=\{meshRef\} position=\{position\}>\s+\{\/\* Painted button \(behind\) - hidden until hover \*\/\}\s+<mesh ref=\{paintedRef\} position=\{\[0, 0, -0\.001\]\} visible=\{false\}>\s+<planeGeometry args=\{\[width, height\]\} \/>\s+<meshBasicMaterial color="#e0e0e0"\s+map=\{paintedTexture\}\s+transparent\s+side=\{THREE\.DoubleSide\}\s+alphaTest=\{0\.5\}\s+depthWrite=\{false\}\s+\/>\s+<\/mesh>/g,
     `return (
         <group ref={meshRef} position={position}>
             {/* Painted button (behind) - hidden until hover */}
             <mesh ref={paintedRef} position={[0, 0, -0.001]} visible={true}>
                 <planeGeometry args={[width, height]} />
-                <meshBasicMaterial
+                <meshBasicMaterial color="#e0e0e0"
                     map={paintedTexture}
                     transparent
                     opacity={0}
@@ -80,10 +80,10 @@ content = content.replace(
 
 // ==== 3. Fix AwardsMilestone meshes ====
 content = content.replace(
-    /<mesh ref=\{sotdCardPaintedRef\} position=\{\[0, 0, -0\.001\]\} visible=\{false\}>\s+<planeGeometry args=\{\[cardHeight \* sotdAspect, cardHeight\]\} \/>\s+<meshBasicMaterial\s+map=\{sotdPaintedTexture\}\s+transparent\s+side=\{THREE\.DoubleSide\}\s+alphaTest=\{0\.5\}\s+\/>\s+<\/mesh>/g,
+    /<mesh ref=\{sotdCardPaintedRef\} position=\{\[0, 0, -0\.001\]\} visible=\{false\}>\s+<planeGeometry args=\{\[cardHeight \* sotdAspect, cardHeight\]\} \/>\s+<meshBasicMaterial color="#e0e0e0"\s+map=\{sotdPaintedTexture\}\s+transparent\s+side=\{THREE\.DoubleSide\}\s+alphaTest=\{0\.5\}\s+\/>\s+<\/mesh>/g,
     `<mesh ref={sotdCardPaintedRef} position={[0, 0, -0.001]} visible={true}>
                     <planeGeometry args={[cardHeight * sotdAspect, cardHeight]} />
-                    <meshBasicMaterial
+                    <meshBasicMaterial color="#e0e0e0"
                         map={sotdPaintedTexture}
                         transparent
                         opacity={0}
@@ -94,10 +94,10 @@ content = content.replace(
 );
 
 content = content.replace(
-    /<mesh ref=\{sotmCardPaintedRef\} position=\{\[0, 0, -0\.001\]\} visible=\{false\}>\s+<planeGeometry args=\{\[cardHeight \* sotmAspect, cardHeight\]\} \/>\s+<meshBasicMaterial\s+map=\{sotmPaintedTexture\}\s+transparent\s+side=\{THREE\.DoubleSide\}\s+alphaTest=\{0\.5\}\s+\/>\s+<\/mesh>/g,
+    /<mesh ref=\{sotmCardPaintedRef\} position=\{\[0, 0, -0\.001\]\} visible=\{false\}>\s+<planeGeometry args=\{\[cardHeight \* sotmAspect, cardHeight\]\} \/>\s+<meshBasicMaterial color="#e0e0e0"\s+map=\{sotmPaintedTexture\}\s+transparent\s+side=\{THREE\.DoubleSide\}\s+alphaTest=\{0\.5\}\s+\/>\s+<\/mesh>/g,
     `<mesh ref={sotmCardPaintedRef} position={[0, 0, -0.001]} visible={true}>
                     <planeGeometry args={[cardHeight * sotmAspect, cardHeight]} />
-                    <meshBasicMaterial
+                    <meshBasicMaterial color="#e0e0e0"
                         map={sotmPaintedTexture}
                         transparent
                         opacity={0}
@@ -108,10 +108,10 @@ content = content.replace(
 );
 
 content = content.replace(
-    /<mesh ref=\{sotyCardPaintedRef\} position=\{\[0, 0, -0\.001\]\} visible=\{false\}>\s+<planeGeometry args=\{\[cardHeight \* sotyAspect, cardHeight\]\} \/>\s+<meshBasicMaterial\s+map=\{sotyPaintedTexture\}\s+transparent\s+side=\{THREE\.DoubleSide\}\s+alphaTest=\{0\.5\}\s+\/>\s+<\/mesh>/g,
+    /<mesh ref=\{sotyCardPaintedRef\} position=\{\[0, 0, -0\.001\]\} visible=\{false\}>\s+<planeGeometry args=\{\[cardHeight \* sotyAspect, cardHeight\]\} \/>\s+<meshBasicMaterial color="#e0e0e0"\s+map=\{sotyPaintedTexture\}\s+transparent\s+side=\{THREE\.DoubleSide\}\s+alphaTest=\{0\.5\}\s+\/>\s+<\/mesh>/g,
     `<mesh ref={sotyCardPaintedRef} position={[0, 0, -0.001]} visible={true}>
                     <planeGeometry args={[cardHeight * sotyAspect, cardHeight]} />
-                    <meshBasicMaterial
+                    <meshBasicMaterial color="#e0e0e0"
                         map={sotyPaintedTexture}
                         transparent
                         opacity={0}
@@ -146,10 +146,10 @@ content = content.replace(
 
 // Skill balloon mesh
 content = content.replace(
-    /<mesh ref=\{paintedMeshRef\} visible=\{false\}>\s+<planeGeometry args=\{\[baseHeight \* aspect, baseHeight\]\} \/>\s+<meshBasicMaterial\s+ref=\{paintedMatRef\}\s+map=\{paintedTexture\}\s+transparent\s+side=\{THREE\.DoubleSide\}\s+alphaTest=\{0\.5\}\s+depthWrite=\{false\}\s+\/>\s+<\/mesh>/g,
+    /<mesh ref=\{paintedMeshRef\} visible=\{false\}>\s+<planeGeometry args=\{\[baseHeight \* aspect, baseHeight\]\} \/>\s+<meshBasicMaterial color="#e0e0e0"\s+ref=\{paintedMatRef\}\s+map=\{paintedTexture\}\s+transparent\s+side=\{THREE\.DoubleSide\}\s+alphaTest=\{0\.5\}\s+depthWrite=\{false\}\s+\/>\s+<\/mesh>/g,
     `<mesh ref={paintedMeshRef} visible={true}>
                     <planeGeometry args={[baseHeight * aspect, baseHeight]} />
-                    <meshBasicMaterial
+                    <meshBasicMaterial color="#e0e0e0"
                         ref={paintedMatRef}
                         map={paintedTexture}
                         transparent

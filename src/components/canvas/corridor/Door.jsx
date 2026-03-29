@@ -175,7 +175,7 @@ const Door = ({
                 {/* Label background (middle layer) */}
                 <mesh position={[0, 0, -0.01]}>
                     <planeGeometry args={[label.length * 0.08 + 0.3, 0.25]} />
-                    <meshBasicMaterial color="#ffffff" />
+                    <meshBasicMaterial color="#e0e0e0" />
                 </mesh>
 
                 {/* Label text (front layer) */}
@@ -208,7 +208,7 @@ const Door = ({
             <mesh position={[0, -0.2, -0.05]} rotation={[0, Math.PI, 0]}>
                 <planeGeometry args={[doorWidth + 0.3, doorHeight + 0.3]} />
                 <meshBasicMaterial
-                    color="#ffffff"
+                    color="#e0e0e0"
                     transparent={true}
                     opacity={glowIntensity} // Dynamic opacity based on proximity
                     depthWrite={false}
@@ -237,15 +237,15 @@ const Door = ({
             <group>
                 <mesh position={[0, doorHeight / 2 + frameThickness / 2, 0]}>
                     <boxGeometry args={[doorWidth + frameThickness * 2, frameThickness, 0.12]} />
-                    <meshStandardMaterial color="#2a2a2a" />
+                    <meshBasicMaterial color="#2a2a2a" />
                 </mesh>
                 <mesh position={[-(doorWidth / 2 + frameThickness / 2), 0, 0]}>
                     <boxGeometry args={[frameThickness, doorHeight, 0.12]} />
-                    <meshStandardMaterial color="#2a2a2a" />
+                    <meshBasicMaterial color="#2a2a2a" />
                 </mesh>
                 <mesh position={[doorWidth / 2 + frameThickness / 2, 0, 0]}>
                     <boxGeometry args={[frameThickness, doorHeight, 0.12]} />
-                    <meshStandardMaterial color="#2a2a2a" />
+                    <meshBasicMaterial color="#2a2a2a" />
                 </mesh>
             </group>
 
@@ -278,23 +278,23 @@ const Door = ({
                     <planeGeometry args={[doorWidth, doorHeight]} />
                     {/* Only use base color since React state won't trigger standard material color change.
                         The scale effect on hover handles the feedback. */}
-                    <meshStandardMaterial color={color} roughness={0.85} />
+                    <meshBasicMaterial color={color} roughness={0.85} />
                 </mesh>
 
                 {/* Decorative panels */}
                 <mesh position={[side === 'left' ? doorWidth / 2 : -doorWidth / 2, 0.4, 0.03]}>
                     <planeGeometry args={[doorWidth * 0.65, doorHeight * 0.3]} />
-                    <meshStandardMaterial color="#e8e2d5" roughness={1} />
+                    <meshBasicMaterial color="#e8e2d5" roughness={1} />
                 </mesh>
                 <mesh position={[side === 'left' ? doorWidth / 2 : -doorWidth / 2, -0.35, 0.03]}>
                     <planeGeometry args={[doorWidth * 0.65, doorHeight * 0.3]} />
-                    <meshStandardMaterial color="#e8e2d5" roughness={1} />
+                    <meshBasicMaterial color="#e8e2d5" roughness={1} />
                 </mesh>
 
                 {/* Handle */}
                 <mesh position={[side === 'left' ? doorWidth * 0.85 : -doorWidth * 0.85, 0, 0.06]}>
                     <sphereGeometry args={[0.055, 12, 12]} />
-                    <meshStandardMaterial color="#222" metalness={0.7} roughness={0.25} />
+                    <meshBasicMaterial color="#222" metalness={0.7} roughness={0.25} />
                 </mesh>
             </group>
         </group>

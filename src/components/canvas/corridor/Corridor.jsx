@@ -29,7 +29,7 @@ const Corridor = ({ length = 100 }) => {
                 rotation={[-Math.PI / 2, 0, 0]}
             >
                 <planeGeometry args={[corridorWidth, length]} />
-                <meshStandardMaterial
+                <meshBasicMaterial
                     color="#f5f2eb"
                     roughness={1}
                     metalness={0}
@@ -49,7 +49,7 @@ const Corridor = ({ length = 100 }) => {
                 rotation={[Math.PI / 2, 0, 0]}
             >
                 <planeGeometry args={[corridorWidth, length]} />
-                <meshStandardMaterial
+                <meshBasicMaterial
                     color="#fefefe"
                     roughness={1}
                 />
@@ -61,7 +61,7 @@ const Corridor = ({ length = 100 }) => {
                 rotation={[0, Math.PI / 2, 0]}
             >
                 <planeGeometry args={[length, corridorHeight]} />
-                <meshStandardMaterial
+                <meshBasicMaterial
                     color="#faf8f5"
                     roughness={1}
                 />
@@ -73,7 +73,7 @@ const Corridor = ({ length = 100 }) => {
                 rotation={[0, -Math.PI / 2, 0]}
             >
                 <planeGeometry args={[length, corridorHeight]} />
-                <meshStandardMaterial
+                <meshBasicMaterial
                     color="#faf8f5"
                     roughness={1}
                 />
@@ -90,7 +90,7 @@ const Corridor = ({ length = 100 }) => {
             {/* End wall */}
             <mesh position={[0, 0, zOffset - length / 2 + 0.5]}>
                 <planeGeometry args={[corridorWidth, corridorHeight]} />
-                <meshStandardMaterial color="#f0ede8" roughness={1} />
+                <meshBasicMaterial color="#f0ede8" roughness={1} />
             </mesh>
         </group>
     );

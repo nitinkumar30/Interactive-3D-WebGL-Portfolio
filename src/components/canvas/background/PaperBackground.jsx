@@ -23,7 +23,7 @@ const PaperBackground = () => {
             {/* Main background plane - far back */}
             <mesh position={[0, 0, -8]}>
                 <planeGeometry args={[25, 18]} />
-                <meshStandardMaterial
+                <meshBasicMaterial
                     map={paperTexture}
                     color="#fafafa"
                     roughness={1}
@@ -34,7 +34,7 @@ const PaperBackground = () => {
             {/* Floor plane with grid effect */}
             <mesh position={[0, -2.5, -2]} rotation={[-Math.PI / 2.5, 0, 0]}>
                 <planeGeometry args={[20, 15]} />
-                <meshStandardMaterial
+                <meshBasicMaterial
                     color="#f5f5f5"
                     roughness={1}
                     metalness={0}

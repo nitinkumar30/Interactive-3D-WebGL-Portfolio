@@ -8,11 +8,11 @@ import { extend } from '@react-three/fiber';
  * Colors and lighting stay 100% standard MeshStandardMaterial pipeline.
  * The custom shader only decides WHICH pixels to hide (with noisy brush-stroke edge).
  * 
- * Usage: <revealMaterial map={sketchTex} uProgress={0-1} transparent={true} ... />
+ * Usage: <revealMaterial color="#e0e0e0" map={sketchTex} uProgress={0-1} transparent={true} ... />
  * Place behind a painted texture mesh. As uProgress increases, sketch pixels get 
  * discarded from bottom to top with noisy edges, revealing the painted door beneath.
  */
-class RevealMaterial extends THREE.MeshStandardMaterial {
+class RevealMaterial extends THREE.MeshBasicMaterial {
     constructor(params = {}) {
         super(params);
         this._uProgress = 0.0;
@@ -76,7 +76,7 @@ class RevealMaterial extends THREE.MeshStandardMaterial {
     }
 }
 
-// Register so R3F can use <revealMaterial />
+// Register so R3F can use <revealMaterial color="#e0e0e0" />
 extend({ RevealMaterial });
 
 export { RevealMaterial };

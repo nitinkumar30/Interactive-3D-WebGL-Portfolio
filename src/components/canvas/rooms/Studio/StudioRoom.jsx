@@ -500,7 +500,7 @@ const StudioRoom = ({ showRoom, onReady, isExiting }) => {
                 {/* Invisible Hit Cylinder for easier drag interaction */}
                 <mesh visible={false}>
                     <cylinderGeometry args={[responsiveParams.towerRadius + 0.5, responsiveParams.towerRadius + 0.5, TOWER_HEIGHT * 1.5, 16]} />
-                    <meshBasicMaterial />
+                    <meshBasicMaterial color="#e0e0e0" />
                 </mesh>
 
                 {monitors.map((item, index) => (
@@ -641,10 +641,9 @@ const MonitorBlock = ({ item, meshRef, isSelected, onClick, disabled }) => {
     const paintedMaterials = useMemo(() => {
         if (!faceConfig) return null;
         return faceConfig.map(f =>
-            new THREE.MeshStandardMaterial({
+            new THREE.MeshBasicMaterial({ color: '#e0e0e0', 
                 map: f.painted || f.sketch, // Use sketch as fallback if no painted version
-                roughness: 0.5
-            })
+                roughness: 0.5 })
         );
     }, [faceConfig]);
 
@@ -652,7 +651,7 @@ const MonitorBlock = ({ item, meshRef, isSelected, onClick, disabled }) => {
     const sketchMaterials = useMemo(() => {
         if (!faceConfig) return null;
         return faceConfig.map(f =>
-            f.painted ? null : new THREE.MeshStandardMaterial({ map: f.sketch, roughness: 0.5 })
+            f.painted ? null : new THREE.MeshBasicMaterial({ color: '#e0e0e0',  map: f.sketch, roughness: 0.5 })
         );
     }, [faceConfig]);
 
@@ -703,7 +702,7 @@ const MonitorBlock = ({ item, meshRef, isSelected, onClick, disabled }) => {
             <group ref={meshRef} position={[item.x, item.baseY, item.z]} rotation={[0, item.rot, 0]}>
                 <mesh>
                     <boxGeometry args={[item.width, item.height, item.depth]} />
-                    <meshStandardMaterial color={item.platformConfig.color} roughness={0.4} metalness={0.1} />
+                    <meshBasicMaterial color={item.platformConfig.color} roughness={0.4} metalness={0.1} />
                 </mesh>
             </group>
         );
@@ -747,7 +746,7 @@ const MonitorBlock = ({ item, meshRef, isSelected, onClick, disabled }) => {
                     if (face.painted) {
                         // This face has a painted version → use revealMaterial for brush-stroke discard
                         return (
-                            <revealMaterial
+                            <revealMaterial color="#e0e0e0"
                                 key={`s${i}`}
                                 ref={matRefs[i]}
                                 attach={`material-${i}`}

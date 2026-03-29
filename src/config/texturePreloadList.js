@@ -73,6 +73,24 @@ export const CORRIDOR_TEXTURES = [
     '/textures/corridor/decorations/paper_airplane.webp',
     '/textures/corridor/decorations/pencil.webp',
     '/textures/corridor/decorations/coffee_cup.webp',
+    // CorridorDecorations - frames, furniture, lamps
+    '/textures/corridor/ramkanazdjecieduza.webp',
+    '/textures/corridor/ramkanazdjecieduza_painted.webp',
+    '/textures/corridor/ramkanazdjeciemala.webp',
+    '/textures/corridor/drzewkowdoniczce.webp',
+    '/textures/corridor/kratkawentylacyjna.webp',
+    '/textures/corridor/kwiatekwdoniczce.webp',
+    '/textures/corridor/kratanalampy.webp',
+    '/textures/corridor/bokilampy.webp',
+    '/textures/corridor/gorastolika.webp',
+    '/textures/corridor/szafkaprzod.webp',
+    '/textures/corridor/szafkaprzodgora.webp',
+    '/textures/corridor/rysuneknaobraz1.webp',
+    '/textures/corridor/rysuneknaobrazek3.webp',
+    // DoorSection extras
+    '/textures/corridor/strzalka.webp',
+    '/textures/corridor/doors/door_back.webp',
+    '/textures/corridor/doors/klamkadodrzwi_painted.webp',
 ];
 
 // Additional textures from App.jsx and avatar animations

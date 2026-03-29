@@ -320,16 +320,14 @@ const GalleryRoom = ({ showRoom, onReady, isExiting }) => {
     }, [floorTexture, railingTexture]);
 
     const materials = useMemo(() => {
-        const floorMat = new THREE.MeshStandardMaterial({
-            map: floorTexture,
-            color: '#ffffff',
+        const floorMat = new THREE.MeshBasicMaterial({ map: floorTexture,
+            color: '#e0e0e0',
             roughness: 0.8,
-            side: THREE.DoubleSide
-        });
+            side: THREE.DoubleSide });
         return {
             floor: floorMat,
-            rope: new THREE.MeshStandardMaterial({ color: '#666666', roughness: 1 }),
-            threshold: new THREE.MeshStandardMaterial({
+            rope: new THREE.MeshBasicMaterial({ color: '#666666', roughness: 1 }),
+            threshold: new THREE.MeshBasicMaterial({ color: '#e0e0e0', 
                 map: (() => {
                     // Use existing baseboard texture logic if available, or load new
                     // Since we don't have it loaded here, let's load it or borrow it
@@ -338,8 +336,7 @@ const GalleryRoom = ({ showRoom, onReady, isExiting }) => {
                     t.colorSpace = THREE.SRGBColorSpace;
                     t.wrapS = t.wrapT = THREE.RepeatWrapping;
                     t.repeat.set(15 / 2.524, 1); // 15 width / ~2.5 unit per tile
-                    return t;
-                })(),
+                    return t; })(),
                 roughness: 0.9,
                 metalness: 0,
                 side: THREE.DoubleSide
@@ -409,7 +406,7 @@ const GalleryRoom = ({ showRoom, onReady, isExiting }) => {
                 {/* Railing */}
                 <mesh position={[0, RAILING_HEIGHT / 2, -3.9]}>
                     <planeGeometry args={[20, RAILING_HEIGHT]} />
-                    <meshStandardMaterial
+                    <meshBasicMaterial color="#e0e0e0"
                         map={railingTexture}
                         transparent={true}
                         side={THREE.DoubleSide}
@@ -454,7 +451,7 @@ const GalleryRoom = ({ showRoom, onReady, isExiting }) => {
                 {/* Houses - center */}
                 <mesh position={[0, -1, -9]} scale={[1, 1, 1]}>
                     <planeGeometry args={[15, 6]} />
-                    <meshBasicMaterial
+                    <meshBasicMaterial color="#e0e0e0"
                         map={housesTexture}
                         transparent={true}
                         alphaTest={0.1}
@@ -464,7 +461,7 @@ const GalleryRoom = ({ showRoom, onReady, isExiting }) => {
                 {/* Houses - left side (mirrored) */}
                 <mesh position={[-15, -1, -9]} scale={[-1, 1, 1]}>
                     <planeGeometry args={[15, 6]} />
-                    <meshBasicMaterial
+                    <meshBasicMaterial color="#e0e0e0"
                         map={housesTexture}
                         transparent={true}
                         alphaTest={0.1}
@@ -482,7 +479,7 @@ const GalleryRoom = ({ showRoom, onReady, isExiting }) => {
                 {/* City skyline - center */}
                 <mesh position={[0, 3.4, -17]} scale={[1, 1, 1]}>
                     <planeGeometry args={[30, 10]} />
-                    <meshBasicMaterial
+                    <meshBasicMaterial color="#e0e0e0"
                         map={cityTexture}
                         transparent={true}
                         alphaTest={0.1}
@@ -492,7 +489,7 @@ const GalleryRoom = ({ showRoom, onReady, isExiting }) => {
                 {/* City skyline - left (mirrored) */}
                 <mesh position={[-30, 3.4, -17]} scale={[-1, 1, 1]}>
                     <planeGeometry args={[30, 10]} />
-                    <meshBasicMaterial
+                    <meshBasicMaterial color="#e0e0e0"
                         map={cityTexture}
                         transparent={true}
                         alphaTest={0.1}
@@ -502,7 +499,7 @@ const GalleryRoom = ({ showRoom, onReady, isExiting }) => {
                 {/* City skyline - right (mirrored) */}
                 <mesh position={[30, 3.4, -17]} scale={[-1, 1, 1]}>
                     <planeGeometry args={[30, 10]} />
-                    <meshBasicMaterial
+                    <meshBasicMaterial color="#e0e0e0"
                         map={cityTexture}
                         transparent={true}
                         alphaTest={0.1}
@@ -593,7 +590,7 @@ const FlyingBird = ({ texture }) => {
     return (
         <mesh ref={birdRef} position={[startX, 4.5, -10]} scale={[BIRD_WIDTH, BIRD_HEIGHT, 1]}>
             <planeGeometry args={[1.5, 1.5]} />
-            <meshBasicMaterial
+            <meshBasicMaterial color="#e0e0e0"
                 map={texture}
                 transparent={true}
                 alphaTest={0.1}
@@ -1002,7 +999,7 @@ const ProjectCard = forwardRef(({ index, project, clothespinTexture, currentScro
             {/* Clothespin (Top Center) - Does NOT move with paperRef */}
             <mesh position={[0, -0.08, 0.15]} rotation={[0, 0, Math.PI]}>
                 <planeGeometry args={[0.3, 0.2]} />
-                <meshBasicMaterial
+                <meshBasicMaterial color="#e0e0e0"
                     map={clothespinTexture}
                     transparent={true}
                     alphaTest={0.1}
@@ -1037,7 +1034,7 @@ const ProjectCard = forwardRef(({ index, project, clothespinTexture, currentScro
                     {/* Warstwa 1: Wizualna ramka przycisku (bez eventów) */}
                     <mesh>
                         <planeGeometry args={[1.2, 0.35]} />
-                        <meshBasicMaterial
+                        <meshBasicMaterial color="#e0e0e0"
                             map={project.buttonTexture}
                             transparent={true}
                             alphaTest={0.05}
@@ -1079,7 +1076,7 @@ const ProjectCard = forwardRef(({ index, project, clothespinTexture, currentScro
                         }}
                     >
                         <planeGeometry args={[1.2, 0.35]} />
-                        <meshBasicMaterial transparent={true} opacity={0} />
+                        <meshBasicMaterial color="#e0e0e0" transparent={true} opacity={0} />
                     </mesh>
                 </group>
 
@@ -1215,7 +1212,7 @@ const RightSideHouses = ({ texture, baseWidth, baseHeight, cropAmount }) => {
     return (
         <mesh position={[newX, -1, -9]} scale={[-1, 1, 1]}>
             <planeGeometry args={[newWidth, baseHeight]} />
-            <meshBasicMaterial
+            <meshBasicMaterial color="#e0e0e0"
                 map={croppedTexture}
                 transparent={true}
                 alphaTest={0.1}
@@ -1232,7 +1229,7 @@ const TechStackLogo = ({ path, position }) => {
     return (
         <mesh position={position}>
             <planeGeometry args={[0.17, 0.17]} />
-            <meshBasicMaterial
+            <meshBasicMaterial color="#e0e0e0"
                 map={texture}
                 transparent={true}
             />

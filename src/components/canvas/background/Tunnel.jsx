@@ -50,12 +50,12 @@ const Tunnel = ({ parallax = { x: 0, y: 0 } }) => {
             position={[0, 0, -15]}
         >
             <cylinderGeometry args={[10, 10, 40, 64, 1, true]} />
-            <meshStandardMaterial
+            <meshBasicMaterial
                 map={paperTexture}
                 side={THREE.BackSide}
                 roughness={1}
                 metalness={0}
-                color="#ffffff"
+                color="#e0e0e0"
             />
         </mesh>
     );

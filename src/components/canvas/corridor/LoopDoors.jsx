@@ -72,19 +72,19 @@ const LoopDoors = ({
             {/* Door Frame */}
             <mesh position={[0, doorHeight / 2 + 0.15, 0]}>
                 <boxGeometry args={[doorWidth * 2 + 0.3, 0.15, 0.15]} />
-                <meshStandardMaterial color="#2a2a2a" />
+                <meshBasicMaterial color="#2a2a2a" />
             </mesh>
 
             {/* Left Door Frame */}
             <mesh position={[-doorWidth - 0.08, 0, 0]}>
                 <boxGeometry args={[0.12, doorHeight + 0.3, 0.15]} />
-                <meshStandardMaterial color="#2a2a2a" />
+                <meshBasicMaterial color="#2a2a2a" />
             </mesh>
 
             {/* Right Door Frame */}
             <mesh position={[doorWidth + 0.08, 0, 0]}>
                 <boxGeometry args={[0.12, doorHeight + 0.3, 0.15]} />
-                <meshStandardMaterial color="#2a2a2a" />
+                <meshBasicMaterial color="#2a2a2a" />
             </mesh>
 
             {/* Left Door - pivots from left edge */}
@@ -94,23 +94,23 @@ const LoopDoors = ({
             >
                 <mesh position={[doorWidth / 2, 0, 0.05]}>
                     <boxGeometry args={[doorWidth, doorHeight, 0.08]} />
-                    <meshStandardMaterial color="#f0ebe0" roughness={0.9} />
+                    <meshBasicMaterial color="#f0ebe0" roughness={0.9} />
                 </mesh>
 
                 {/* Door panel details */}
                 <mesh position={[doorWidth / 2, 0.3, 0.1]}>
                     <planeGeometry args={[doorWidth * 0.7, doorHeight * 0.35]} />
-                    <meshStandardMaterial color="#e8e3d8" roughness={1} />
+                    <meshBasicMaterial color="#e8e3d8" roughness={1} />
                 </mesh>
                 <mesh position={[doorWidth / 2, -0.4, 0.1]}>
                     <planeGeometry args={[doorWidth * 0.7, doorHeight * 0.35]} />
-                    <meshStandardMaterial color="#e8e3d8" roughness={1} />
+                    <meshBasicMaterial color="#e8e3d8" roughness={1} />
                 </mesh>
 
                 {/* Handle */}
                 <mesh position={[doorWidth - 0.15, 0, 0.12]}>
                     <sphereGeometry args={[0.05, 12, 12]} />
-                    <meshStandardMaterial color="#333" metalness={0.6} roughness={0.3} />
+                    <meshBasicMaterial color="#333" metalness={0.6} roughness={0.3} />
                 </mesh>
             </group>
 
@@ -121,34 +121,34 @@ const LoopDoors = ({
             >
                 <mesh position={[-doorWidth / 2, 0, 0.05]}>
                     <boxGeometry args={[doorWidth, doorHeight, 0.08]} />
-                    <meshStandardMaterial color="#f0ebe0" roughness={0.9} />
+                    <meshBasicMaterial color="#f0ebe0" roughness={0.9} />
                 </mesh>
 
                 {/* Door panel details */}
                 <mesh position={[-doorWidth / 2, 0.3, 0.1]}>
                     <planeGeometry args={[doorWidth * 0.7, doorHeight * 0.35]} />
-                    <meshStandardMaterial color="#e8e3d8" roughness={1} />
+                    <meshBasicMaterial color="#e8e3d8" roughness={1} />
                 </mesh>
                 <mesh position={[-doorWidth / 2, -0.4, 0.1]}>
                     <planeGeometry args={[doorWidth * 0.7, doorHeight * 0.35]} />
-                    <meshStandardMaterial color="#e8e3d8" roughness={1} />
+                    <meshBasicMaterial color="#e8e3d8" roughness={1} />
                 </mesh>
 
                 {/* Handle */}
                 <mesh position={[-doorWidth + 0.15, 0, 0.12]}>
                     <sphereGeometry args={[0.05, 12, 12]} />
-                    <meshStandardMaterial color="#333" metalness={0.6} roughness={0.3} />
+                    <meshBasicMaterial color="#333" metalness={0.6} roughness={0.3} />
                 </mesh>
             </group>
 
-            {/* Light above doors */}
-            <pointLight
+            {/* Light above doors - WYLACZONE */}
+            {/* <pointLight
                 position={[0, 1.5, 1]}
                 intensity={0.8}
                 color="#fff8e0"
                 distance={8}
                 decay={2}
-            />
+            /> */}
         </group>
     );
 };

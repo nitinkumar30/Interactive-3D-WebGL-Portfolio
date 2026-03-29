@@ -55,7 +55,10 @@ const InfiniteCorridorManager = ({
     setCameraOverride // Function to take over camera control
 }) => {
     const { camera } = useThree();
-    const [activeSegments, setActiveSegments] = useState([0]);
+    // Pre-mount segments 0 and 1 so shaders compile during preloader.
+    // Segment -1 is NOT pre-mounted to avoid visual collision with entrance doors.
+    // It mounts dynamically when camera reaches entrance (behind camera = invisible stutter).
+    const [activeSegments, setActiveSegments] = useState([0, 1]);
 
     // Calculate which segment the camera is in
     const getSegmentFromZ = useCallback((z) => {

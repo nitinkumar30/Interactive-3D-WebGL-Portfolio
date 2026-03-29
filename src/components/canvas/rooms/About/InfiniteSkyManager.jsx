@@ -99,7 +99,7 @@ const AwardButton = ({ onClick, texture, paintedTexture, width, height, position
             {/* Painted button (behind) - hidden until hover */}
             <mesh ref={paintedRef} position={[0, 0, -0.001]} visible={true}>
                 <planeGeometry args={[width, height]} />
-                <meshBasicMaterial
+                <meshBasicMaterial color="#e0e0e0"
                     map={paintedTexture}
                     transparent
                     opacity={0}
@@ -369,7 +369,7 @@ const IntroMilestone = ({ z, scrollProgressRef }) => {
             {/* Avatar on cloud - floating + spreads up-left */}
             <mesh ref={avatarRef} position={[0, baseY, 0]}>
                 <planeGeometry args={[avatarWidth, avatarHeight]} />
-                <meshBasicMaterial
+                <meshBasicMaterial color="#e0e0e0"
                     map={avatarTexture}
                     transparent
                     side={THREE.DoubleSide}
@@ -627,7 +627,7 @@ const AwardsMilestone = ({ z, scrollProgressRef }) => {
                 {/* Painted card (behind) - hidden until button hover */}
                 <mesh ref={sotdCardPaintedRef} position={[0, 0, -0.001]} visible={true}>
                     <planeGeometry args={[cardHeight * sotdAspect, cardHeight]} />
-                    <meshBasicMaterial
+                    <meshBasicMaterial color="#e0e0e0"
                         map={sotdPaintedTexture}
                         transparent
                         opacity={0}
@@ -688,7 +688,7 @@ const AwardsMilestone = ({ z, scrollProgressRef }) => {
                 {/* Painted card (behind) - hidden until button hover */}
                 <mesh ref={sotmCardPaintedRef} position={[0, 0, -0.001]} visible={true}>
                     <planeGeometry args={[cardHeight * sotmAspect, cardHeight]} />
-                    <meshBasicMaterial
+                    <meshBasicMaterial color="#e0e0e0"
                         map={sotmPaintedTexture}
                         transparent
                         opacity={0}
@@ -749,7 +749,7 @@ const AwardsMilestone = ({ z, scrollProgressRef }) => {
                 {/* Painted card (behind) - hidden until button hover */}
                 <mesh ref={sotyCardPaintedRef} position={[0, 0, -0.001]} visible={true}>
                     <planeGeometry args={[cardHeight * sotyAspect, cardHeight]} />
-                    <meshBasicMaterial
+                    <meshBasicMaterial color="#e0e0e0"
                         map={sotyPaintedTexture}
                         transparent
                         opacity={0}
@@ -916,7 +916,7 @@ const JourneyMilestone = ({ z, scrollProgressRef }) => {
             <group ref={uoRef} position={[-3.5, -1, 0]}>
                 <mesh>
                     <planeGeometry args={[islandHeight * uoAspect, islandHeight]} />
-                    <meshBasicMaterial
+                    <meshBasicMaterial color="#e0e0e0"
                         map={uoTexture}
                         transparent
                         side={THREE.DoubleSide}
@@ -939,7 +939,7 @@ const JourneyMilestone = ({ z, scrollProgressRef }) => {
             <group ref={freelanceRef} position={[3.5, -2, 0.5]}>
                 <mesh>
                     <planeGeometry args={[islandHeight * freelanceAspect, islandHeight]} />
-                    <meshBasicMaterial
+                    <meshBasicMaterial color="#e0e0e0"
                         map={freelanceTexture}
                         transparent
                         side={THREE.DoubleSide}
@@ -1241,7 +1241,7 @@ const SkillBalloon = ({ config, revealFactorRef, spreadFactorRef, timeRef }) => 
                 {/* Painted balloon (behind) - hidden until hover */}
                 <mesh ref={paintedMeshRef} visible={true}>
                     <planeGeometry args={[baseHeight * aspect, baseHeight]} />
-                    <meshBasicMaterial
+                    <meshBasicMaterial color="#e0e0e0"
                         ref={paintedMatRef}
                         map={paintedTexture}
                         transparent
