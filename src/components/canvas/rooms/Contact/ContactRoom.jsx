@@ -41,7 +41,7 @@ export const LATARNIA_SETTINGS = {
     rotation: [0, 0.1, 0],
 
     // Wielkość: [szerokość, wysokość]
-    scale: [4, 5]
+    scale: [4.49, 5] // Legacy ratio 1102/1225
 };
 
 // ============================================
@@ -56,7 +56,7 @@ export const STATEK_SETTINGS = {
     rotation: [0, -0.2, 0],
 
     // Wielkość: [szerokość, wysokość]
-    scale: [3, 1.3]
+    scale: [3.35, 1.3] // Legacy ratio 2525/978
 };
 
 // ============================================

@@ -250,18 +250,18 @@ const DoorSection = ({
         return tex;
     }, [baseboardTexture]);
 
-    // Door dimensions - based on texture aspect ratio (door texture ~1:2.5)
-    const doorWidth = 1.13;
+    // Door dimensions - based on legacy texture aspect ratio (approx 0.376)
+    const doorRatio = label === 'THE STUDIO' ? 0.388 : 0.376;
     const doorHeight = 2.5;
+    const doorWidth = doorHeight * doorRatio * 1.12;
 
-    // Frame dimensions - slightly larger than door
-    const frameWidth = 1.35;
+    // Frame dimensions - based on legacy ratio 762/1759 (0.433)
     const frameHeight = 2.5;
+    const frameWidth = frameHeight * 0.5;
 
-    // Hole dimensions - MUST fit inside wall (height 3.5, bottom at -1.75)
-    // Previous hole went to -1.775 which broke geometry. New range: [-1.7, 0.6]
-    const holeWidth = 1.1;
-    const holeHeight = 2.4;
+    // Hole dimensions - MUST fit inside wall
+    const holeWidth = doorWidth - 0.03;
+    const holeHeight = doorHeight - 0.1;
     const holeOffsetY = -0.55; // Same as door group Y offset
 
     // Create wall geometry with door hole
@@ -928,6 +928,9 @@ const DoorSection = ({
 
     // Sign texture mapping - now uses a single empty sign texture
     const signTextureUrl = '/textures/corridor/pustatabliczka.webp';
+    const signLegacyRatio = 1.792; // 2752x1536
+    const signHeight = 0.55;
+    const signWidth = signHeight * signLegacyRatio;
     const signTexture = useTexture(signTextureUrl);
 
     return (

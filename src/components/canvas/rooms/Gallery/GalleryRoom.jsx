@@ -74,10 +74,9 @@ const UNIQUE_PROJECTS = [
 const PROJECT_COUNT = 10; // Keep the count for the infinite scroll feel
 const GAP = 2.5;
 
-// === CONFIGURATION ===
-// Zmień te wartości aby dopasować proporcje ptaka (grafika nie jest kwadratowa)
-const BIRD_WIDTH = 0.5;
-const BIRD_HEIGHT = 0.35; // Mniejsze = bardziej "spłaszczony" / rozciągnięty wzdłuż
+// Zmień te wartości aby dopasować proporcje ptaka (legacy ratio 1.41)
+const BIRD_WIDTH = 0.49;
+const BIRD_HEIGHT = 0.35;
 
 // Adjust this value (0.0 to 1.0) to crop the right side of the "Houses" graphic.
 // 0.0 = No crop
@@ -159,7 +158,7 @@ const GalleryRoom = ({ showRoom, onReady, isExiting, isWarmup }) => {
     // Config
     const BALCONY_WIDTH = 5;
     const BALCONY_DEPTH = 3;
-    const RAILING_HEIGHT = 1.1;
+    const RAILING_HEIGHT = 1.25; // Legacy ratio 20/(7 segments * 2.287)
 
     // --- TEXTURES AND RESPONSIVENESS ---
     const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' ? window.innerWidth < 768 : false);
@@ -309,7 +308,7 @@ const GalleryRoom = ({ showRoom, onReady, isExiting, isWarmup }) => {
         if (floorTexture) {
             floorTexture.wrapS = THREE.MirroredRepeatWrapping;
             floorTexture.wrapT = THREE.MirroredRepeatWrapping;
-            floorTexture.repeat.set(0.5, 0.7);
+            floorTexture.repeat.set(0.5, 0.5 * 1.835); // Adjust repeat to keep scale with legacy 1.835 ratio
             floorTexture.needsUpdate = true;
         }
         if (railingTexture) {
@@ -320,14 +319,16 @@ const GalleryRoom = ({ showRoom, onReady, isExiting, isWarmup }) => {
     }, [floorTexture, railingTexture]);
 
     const materials = useMemo(() => {
-        const floorMat = new THREE.MeshBasicMaterial({ map: floorTexture,
+        const floorMat = new THREE.MeshBasicMaterial({
+            map: floorTexture,
             color: '#e0e0e0',
-            roughness: 0.8,
-            side: THREE.DoubleSide });
+            side: THREE.DoubleSide
+        });
         return {
             floor: floorMat,
-            rope: new THREE.MeshBasicMaterial({ color: '#666666', roughness: 1 }),
-            threshold: new THREE.MeshBasicMaterial({ color: '#e0e0e0', 
+            rope: new THREE.MeshBasicMaterial({ color: '#666666' }),
+            threshold: new THREE.MeshBasicMaterial({
+                color: '#e0e0e0',
                 map: (() => {
                     // Use existing baseboard texture logic if available, or load new
                     // Since we don't have it loaded here, let's load it or borrow it
@@ -336,9 +337,9 @@ const GalleryRoom = ({ showRoom, onReady, isExiting, isWarmup }) => {
                     t.colorSpace = THREE.SRGBColorSpace;
                     t.wrapS = t.wrapT = THREE.RepeatWrapping;
                     t.repeat.set(15 / 2.524, 1); // 15 width / ~2.5 unit per tile
-                    return t; })(),
-                roughness: 0.9,
-                metalness: 0,
+                    return t;
+                })(),
+
                 side: THREE.DoubleSide
             })
         };
@@ -450,7 +451,7 @@ const GalleryRoom = ({ showRoom, onReady, isExiting, isWarmup }) => {
                 {/* === SCENERY LAYERS === */}
                 {/* Houses - center */}
                 <mesh position={[0, -1, -9]} scale={[1, 1, 1]}>
-                    <planeGeometry args={[15, 6]} />
+                    <planeGeometry args={[15, 15 / 2.357]} />
                     <meshBasicMaterial color="#e0e0e0"
                         map={housesTexture}
                         transparent={true}
@@ -460,7 +461,7 @@ const GalleryRoom = ({ showRoom, onReady, isExiting, isWarmup }) => {
                 </mesh>
                 {/* Houses - left side (mirrored) */}
                 <mesh position={[-15, -1, -9]} scale={[-1, 1, 1]}>
-                    <planeGeometry args={[15, 6]} />
+                    <planeGeometry args={[15, 15 / 2.357]} />
                     <meshBasicMaterial color="#e0e0e0"
                         map={housesTexture}
                         transparent={true}
@@ -472,13 +473,13 @@ const GalleryRoom = ({ showRoom, onReady, isExiting, isWarmup }) => {
                 <RightSideHouses
                     texture={housesTexture}
                     baseWidth={15}
-                    baseHeight={6}
+                    baseHeight={15 / 2.357}
                     cropAmount={RIGHT_CROP_AMOUNT}
                 />
 
                 {/* City skyline - center */}
                 <mesh position={[0, 3.4, -17]} scale={[1, 1, 1]}>
-                    <planeGeometry args={[30, 10]} />
+                    <planeGeometry args={[30, 30 / 2.357]} />
                     <meshBasicMaterial color="#e0e0e0"
                         map={cityTexture}
                         transparent={true}
@@ -488,7 +489,7 @@ const GalleryRoom = ({ showRoom, onReady, isExiting, isWarmup }) => {
                 </mesh>
                 {/* City skyline - left (mirrored) */}
                 <mesh position={[-30, 3.4, -17]} scale={[-1, 1, 1]}>
-                    <planeGeometry args={[30, 10]} />
+                    <planeGeometry args={[30, 30 / 2.357]} />
                     <meshBasicMaterial color="#e0e0e0"
                         map={cityTexture}
                         transparent={true}
@@ -498,7 +499,7 @@ const GalleryRoom = ({ showRoom, onReady, isExiting, isWarmup }) => {
                 </mesh>
                 {/* City skyline - right (mirrored) */}
                 <mesh position={[30, 3.4, -17]} scale={[-1, 1, 1]}>
-                    <planeGeometry args={[30, 10]} />
+                    <planeGeometry args={[30, 30 / 2.357]} />
                     <meshBasicMaterial color="#e0e0e0"
                         map={cityTexture}
                         transparent={true}
@@ -1033,7 +1034,7 @@ const ProjectCard = forwardRef(({ index, project, clothespinTexture, currentScro
                 >
                     {/* Warstwa 1: Wizualna ramka przycisku (bez eventów) */}
                     <mesh>
-                        <planeGeometry args={[1.2, 0.35]} />
+                        <planeGeometry args={[1.2, 1.2 / 3.613]} />
                         <meshBasicMaterial color="#e0e0e0"
                             map={project.buttonTexture}
                             transparent={true}
@@ -1075,7 +1076,7 @@ const ProjectCard = forwardRef(({ index, project, clothespinTexture, currentScro
                             setBtnHovered(false);
                         }}
                     >
-                        <planeGeometry args={[1.2, 0.35]} />
+                        <planeGeometry args={[1.2, 1.2 / 3.613]} />
                         <meshBasicMaterial color="#e0e0e0" transparent={true} opacity={0} />
                     </mesh>
                 </group>

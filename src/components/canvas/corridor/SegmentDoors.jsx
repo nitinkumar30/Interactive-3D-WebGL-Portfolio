@@ -57,18 +57,15 @@ const SegmentDoors = ({
     const NATURAL_TILE_W = (1582 / 94) * 0.15; // ~2.524 units per natural tile
 
     // --- Dimensions from EntranceDoors ---
-    // Door dimensions - calculated from texture proportions (332x848 = 1:2.55)
-    // Adjusted sizes - Scale these up/down to change door size
-    // Original: 0.94 / 2.4
-    const doorWidth = 0.94; // Increased width (was 0.94)
-    const doorHeight = 2.4; // Increased height (was 2.4)
+    // Door dimensions - calculated from legacy texture proportions (332x848 = 0.391)
+    const doorHeight = 2.4;
+    const doorWidth = doorHeight * 0.391;
     const doorOpeningWidth = doorWidth * 2;
     const wallThickness = 0.12;
 
-    // Frame dimensions from texture (718x877 = 1:1.22)
-    // Frame scales automatically with door width
+    // Frame dimensions from legacy texture (718x877 = 0.818)
     const frameWidth = doorOpeningWidth + 0.16;
-    const frameHeight = frameWidth * (877 / 718);
+    const frameHeight = frameWidth * (1 / 0.818);
 
     // Floor is at Y = -corridorHeight/2 = -1.75
     const floorY = -corridorHeight / 2;
@@ -173,7 +170,7 @@ const SegmentDoors = ({
                 position={[-(doorOpeningWidth / 2 + sideWallWidth / 2), wallCenterY, 0.07]}
                 rotation={[0, 0, 0.05]}
             >
-                <planeGeometry args={[1.2, 3]} />
+                <planeGeometry args={[1.2, 1.2 / 0.402]} />
                 <meshBasicMaterial color="#e0e0e0"
                     map={ideaTexture}
                     transparent={true}
@@ -195,7 +192,7 @@ const SegmentDoors = ({
                 position={[(doorOpeningWidth / 2 + sideWallWidth / 2), wallCenterY, 0.08]}
                 rotation={[0, 0, -0.05]}
             >
-                <planeGeometry args={[2.2, 1.2]} />
+                <planeGeometry args={[2.2, 2.2 / 1.833]} />
                 <meshBasicMaterial color="#e0e0e0"
                     map={coffeeTexture}
                     transparent={true}
@@ -211,7 +208,7 @@ const SegmentDoors = ({
             </mesh>
             {/* Decoration Top (While True) */}
             <mesh position={[0, topWallCenterY, 0.07]}>
-                <planeGeometry args={[1.4, 0.7]} />
+                <planeGeometry args={[1.4, 1.4 / 1.833]} />
                 <meshBasicMaterial color="#e0e0e0"
                     map={whileTrueTexture}
                     transparent={true}

@@ -274,9 +274,10 @@ const IntroMilestone = ({ z, scrollProgressRef }) => {
     const baseY = 2;
 
     // Calculate aspect ratio
-    const aspectRatio = avatarTexture.image ? avatarTexture.image.width / avatarTexture.image.height : 1.5;
+    // LEGACY FIX: Use original dimensions (2816x1536) to prevent stretching
+    const legacyAspectRatio = 2816 / 1536; 
     const avatarWidth = 6; // Zwiększony rozmiar awatara na chmurce
-    const avatarHeight = avatarWidth / aspectRatio;
+    const avatarHeight = avatarWidth / legacyAspectRatio;
 
     // Animation: floating + spread apart when close
     useFrame((state) => {
@@ -513,17 +514,16 @@ const AwardsMilestone = ({ z, scrollProgressRef }) => {
     buttonPaintedTexture.colorSpace = THREE.SRGBColorSpace;
 
     // Calculate aspect ratios
-    const sotyAspect = sotyTexture.image ? sotyTexture.image.width / sotyTexture.image.height : 1.5;
-    const sotdAspect = sotdTexture.image ? sotdTexture.image.width / sotdTexture.image.height : 1.5;
-    const sotmAspect = sotmTexture.image ? sotmTexture.image.width / sotmTexture.image.height : 1.5;
-    const buttonAspect = buttonTexture.image ? buttonTexture.image.width / buttonTexture.image.height : 3;
+    // LEGACY FIX: Use original dimensions for cards (2400x1760) and buttons (894x208)
+    const cardLegacyAspect = 2400 / 1760;
+    const buttonLegacyAspect = 894 / 208;
 
     // Base height for cards
     const cardHeight = 2.5;
 
     // Button dimensions
     const buttonHeight = 0.35;
-    const buttonWidth = buttonHeight * buttonAspect;
+    const buttonWidth = buttonHeight * buttonLegacyAspect;
     const buttonY = -cardHeight / 2 - buttonHeight / 2 + 0.5;
 
     // Card hover handler factory
@@ -626,7 +626,7 @@ const AwardsMilestone = ({ z, scrollProgressRef }) => {
             <group ref={sotdRef} position={[0, 0.5, -0.5]}>
                 {/* Painted card (behind) - hidden until button hover */}
                 <mesh ref={sotdCardPaintedRef} position={[0, 0, -0.001]} visible={true}>
-                    <planeGeometry args={[cardHeight * sotdAspect, cardHeight]} />
+                    <planeGeometry args={[cardHeight * cardLegacyAspect, cardHeight]} />
                     <meshBasicMaterial color="#e0e0e0"
                         map={sotdPaintedTexture}
                         transparent
@@ -637,7 +637,7 @@ const AwardsMilestone = ({ z, scrollProgressRef }) => {
                 </mesh>
                 {/* Sketch card (front) with reveal */}
                 <mesh>
-                    <planeGeometry args={[cardHeight * sotdAspect, cardHeight]} />
+                    <planeGeometry args={[cardHeight * cardLegacyAspect, cardHeight]} />
                     <revealBasicMaterial
                         ref={sotdCardRevealRef}
                         map={sotdTexture}
@@ -687,7 +687,7 @@ const AwardsMilestone = ({ z, scrollProgressRef }) => {
             <group ref={sotmRef} position={[0, 0.5, -0.2]}>
                 {/* Painted card (behind) - hidden until button hover */}
                 <mesh ref={sotmCardPaintedRef} position={[0, 0, -0.001]} visible={true}>
-                    <planeGeometry args={[cardHeight * sotmAspect, cardHeight]} />
+                    <planeGeometry args={[cardHeight * cardLegacyAspect, cardHeight]} />
                     <meshBasicMaterial color="#e0e0e0"
                         map={sotmPaintedTexture}
                         transparent
@@ -698,7 +698,7 @@ const AwardsMilestone = ({ z, scrollProgressRef }) => {
                 </mesh>
                 {/* Sketch card (front) with reveal */}
                 <mesh>
-                    <planeGeometry args={[cardHeight * sotmAspect, cardHeight]} />
+                    <planeGeometry args={[cardHeight * cardLegacyAspect, cardHeight]} />
                     <revealBasicMaterial
                         ref={sotmCardRevealRef}
                         map={sotmTexture}
@@ -748,7 +748,7 @@ const AwardsMilestone = ({ z, scrollProgressRef }) => {
             <group ref={sotyRef} position={[0, 0.5, 0]}>
                 {/* Painted card (behind) - hidden until button hover */}
                 <mesh ref={sotyCardPaintedRef} position={[0, 0, -0.001]} visible={true}>
-                    <planeGeometry args={[cardHeight * sotyAspect, cardHeight]} />
+                    <planeGeometry args={[cardHeight * cardLegacyAspect, cardHeight]} />
                     <meshBasicMaterial color="#e0e0e0"
                         map={sotyPaintedTexture}
                         transparent
@@ -759,7 +759,7 @@ const AwardsMilestone = ({ z, scrollProgressRef }) => {
                 </mesh>
                 {/* Sketch card (front) with reveal */}
                 <mesh>
-                    <planeGeometry args={[cardHeight * sotyAspect, cardHeight]} />
+                    <planeGeometry args={[cardHeight * cardLegacyAspect, cardHeight]} />
                     <revealBasicMaterial
                         ref={sotyCardRevealRef}
                         map={sotyTexture}
@@ -827,9 +827,10 @@ const JourneyMilestone = ({ z, scrollProgressRef }) => {
     freelanceTexture.colorSpace = THREE.SRGBColorSpace;
 
     // Calculate aspect ratios to keep images 1:1 (not stretched)
-    // Default to 1 if image not fully loaded yet
-    const uoAspect = uoTexture.image ? uoTexture.image.width / uoTexture.image.height : 1;
-    const freelanceAspect = freelanceTexture.image ? freelanceTexture.image.width / freelanceTexture.image.height : 1;
+    // LEGACY FIX: Use original dimensions (2816x1536)
+    const islandLegacyAspect = 2816 / 1536;
+    const uoAspect = islandLegacyAspect;
+    const freelanceAspect = islandLegacyAspect;
 
     // Base height for islands - width will adjust automatically
     const islandHeight = 4.5;
@@ -1029,7 +1030,16 @@ const SkillBalloon = ({ config, revealFactorRef, spreadFactorRef, timeRef }) => 
         }
     };
 
-    const aspect = texture.image ? texture.image.width / texture.image.height : 1;
+    // LEGACY FIX: Use original aspect ratios from BALLOON_CONFIG or hardcoded for categories
+    const legacyAspects = {
+        'reactduzybalon.webp': 736 / 1447,
+        'threejsduzybalon.webp': 1141 / 1964,
+        'GSAPduzybalon.webp': 1.0, // GSAP balloon is square
+        'default_small_medium': 631 / 1482 // Common ratio for others
+    };
+    
+    const filename = config.texture.split('/').pop();
+    const aspect = legacyAspects[filename] || legacyAspects['default_small_medium'];
     const baseHeight = SIZE_MULTIPLIERS[config.size];
 
     const outerGroupRef = useRef();

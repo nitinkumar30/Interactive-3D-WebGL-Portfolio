@@ -25,16 +25,21 @@ const RoomWarmup = ({ onWarmupComplete }) => {
     const { gl, scene, camera } = useThree();
 
     // Wait for rooms to render a few frames, then compile and unmount
+    const warmupStart = useRef(performance.now());
+
     useFrame(() => {
         if (isDone || completeFired.current) return;
 
         frameCount.current++;
 
-        // Wait 8 frames for all rooms to mount and render their meshes/textures
-        if (frameCount.current >= 8) {
+        // Reduced from 8 to 3 frames - enough for rooms to mount their first meshes
+        if (frameCount.current >= 3) {
             completeFired.current = true;
 
             const finishWarmup = () => {
+                const warmupDuration = ((performance.now() - warmupStart.current) / 1000).toFixed(2);
+                console.info(`🔥 GPU/Shader Warmup Complete: ${warmupDuration}s`);
+                
                 requestAnimationFrame(() => {
                     setIsDone(true);
                     onWarmupComplete?.();

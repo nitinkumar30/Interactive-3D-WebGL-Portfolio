@@ -376,7 +376,7 @@ const CorridorDecorations = ({ segmentLength, zOffset, corridorWidth = 4, corrid
             z: zOffset - 10,         // Między startem a Gallery (relZ -5 do -15)
             side: 'right',
             width: 2.5,              // Szerokość ramki
-            height: 1.5,             // Wysokość ramki  (proporcje jak tektura ~16:10)
+            height: 2.5 / 1.785,     // Legacy ratio 3200x1792
             y: 0.3,                  // Wysokość na ścianie
             id: 'frame-1',
             // Custom setup for "rysuneknaobraz1.png"
@@ -389,7 +389,7 @@ const CorridorDecorations = ({ segmentLength, zOffset, corridorWidth = 4, corrid
             z: zOffset - 25,         // Między Gallery a Studio (relZ -20 do -30)
             side: 'left',
             width: 2.5,
-            height: 1.5,
+            height: 2.5 / 1.785,
             y: 0.2,
             id: 'frame-2',
             image: '/textures/corridor/rysuneknaobrazek3.webp',
@@ -401,7 +401,7 @@ const CorridorDecorations = ({ segmentLength, zOffset, corridorWidth = 4, corrid
             z: zOffset - 40,         // Między Studio a About (relZ -34 do -46)
             side: 'right',
             width: 2.5,
-            height: 1.5,
+            height: 2.5 / 1.785,
             y: 0.25,
             id: 'frame-3',
             signature: "Empty canvas!\nWant your art here?\nContact me!",
@@ -414,7 +414,7 @@ const CorridorDecorations = ({ segmentLength, zOffset, corridorWidth = 4, corrid
             z: zOffset - 55,         // Między About a Connect (relZ -50 do -60)
             side: 'left',
             width: 2.5,
-            height: 1.5,
+            height: 2.5 / 1.785,
             y: 0.35,
             id: 'frame-4',
             signature: "Empty canvas!\nWant your art here?\nContact me!",
@@ -554,7 +554,7 @@ const CorridorDecorations = ({ segmentLength, zOffset, corridorWidth = 4, corrid
                     position={[0, tableConfig.height + tableConfig.topThickness + 0.2, 0]} // Na blacie
                     rotation={[0, -Math.PI / 4, 0]} // Lekki obrót
                 >
-                    <planeGeometry args={[0.3, 0.4]} />
+                    <planeGeometry args={[0.3, 0.3 / 0.758]} />
                     <meshBasicMaterial color="#e0e0e0"
                         map={flowerTexture}
                         transparent={true}
@@ -595,7 +595,7 @@ const CorridorDecorations = ({ segmentLength, zOffset, corridorWidth = 4, corrid
             // Z: zOffset - 51 (blisko drzwi About)
             >
                 {/* Wymiary: X=0.5 (głębokość od ściany), Y=1.0 (wysokość), Z=0.8 (szerokość wzdłuż ściany) */}
-                <boxGeometry args={[0.5, 1.0, 0.8]} />
+                <boxGeometry args={[0.5, 1.0, 1.0 * 0.8]} />
                 {/* 
                     Materials for BoxGeometry:
                     0: Right (+x) - Wall side
@@ -619,7 +619,7 @@ const CorridorDecorations = ({ segmentLength, zOffset, corridorWidth = 4, corrid
                 position={[wallX - 0.26, floorY + 1.0 + 0.2, zOffset - 51]}
                 rotation={[0, -Math.PI / 2 + 0.2, 0]} // Lekki obrót, żeby nie stała idealnie prosto
             >
-                <planeGeometry args={[0.3, 0.4]} />
+                <planeGeometry args={[0.3, 0.3 / 0.777]} />
                 <meshBasicMaterial color="#e0e0e0"
                     map={standingFrameTexture}
                     transparent={true}
@@ -636,7 +636,7 @@ const CorridorDecorations = ({ segmentLength, zOffset, corridorWidth = 4, corrid
                 position={[-wallX + 0.8, floorY + 1.5, zOffset - 58]} // Left side
                 rotation={[0, Math.PI / 4, 0]} // Obrócone w stronę korytarza (z lewej)
             >
-                <planeGeometry args={[1.8, 3]} />
+                <planeGeometry args={[1.8, 1.8 / 0.602]} />
                 <meshBasicMaterial color="#e0e0e0"
                     map={treeTexture}
                     transparent={true}
@@ -662,7 +662,7 @@ const CorridorDecorations = ({ segmentLength, zOffset, corridorWidth = 4, corrid
                         ]}
                         rotation={[0, grateSide === 'left' ? Math.PI / 2 : -Math.PI / 2, 0]}
                     >
-                        <planeGeometry args={[0.8, 0.5]} />
+                        <planeGeometry args={[0.8, 0.8 / 1.968]} />
                         <meshBasicMaterial color="#e0e0e0"
                             map={grateTexture}
                             transparent={true}

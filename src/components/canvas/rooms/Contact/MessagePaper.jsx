@@ -4,7 +4,7 @@ import { useFrame } from '@react-three/fiber';
 import { Text, useTexture, Html, useCursor } from '@react-three/drei';
 import * as THREE from 'three';
 
-const PAPER_WIDTH = 1.4;
+const PAPER_WIDTH = 1.51; // Legacy ratio 1197/1340
 const PAPER_HEIGHT = 1.7;
 const FONT_PATH = '/fonts/CabinSketch-Regular.ttf';
 

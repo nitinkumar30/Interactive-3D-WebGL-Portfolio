@@ -85,12 +85,12 @@ const RoomInterior = memo(({ label, showRoom, onReady, isExiting }) => {
         bbRight.repeat.set(corridorDepth / NATURAL_TILE_W, 1);
 
         return {
-            corridorFloor: new THREE.MeshBasicMaterial({ color: '#e0e0e0',  map: floorTex, roughness: 1, metalness: 0, side: THREE.DoubleSide }),
-            corridorWallL: new THREE.MeshBasicMaterial({ color: '#e0e0e0',  map: wallTexL, roughness: 0.95, side: THREE.DoubleSide }),
-            corridorWallR: new THREE.MeshBasicMaterial({ color: '#e0e0e0',  map: wallTexR, roughness: 0.95, side: THREE.DoubleSide }),
-            corridorCeiling: new THREE.MeshBasicMaterial({ color: '#e0e0e0',  map: ceilTex, roughness: 0.9, side: THREE.DoubleSide }),
-            bbLeft: new THREE.MeshBasicMaterial({ color: '#e0e0e0',  map: bbLeft, roughness: 0.8, side: THREE.DoubleSide }),
-            bbRight: new THREE.MeshBasicMaterial({ color: '#e0e0e0',  map: bbRight, roughness: 0.8, side: THREE.DoubleSide }),
+            corridorFloor: new THREE.MeshBasicMaterial({ color: '#e0e0e0',  map: floorTex, side: THREE.DoubleSide }),
+            corridorWallL: new THREE.MeshBasicMaterial({ color: '#e0e0e0',  map: wallTexL, side: THREE.DoubleSide }),
+            corridorWallR: new THREE.MeshBasicMaterial({ color: '#e0e0e0',  map: wallTexR, side: THREE.DoubleSide }),
+            corridorCeiling: new THREE.MeshBasicMaterial({ color: '#e0e0e0',  map: ceilTex, side: THREE.DoubleSide }),
+            bbLeft: new THREE.MeshBasicMaterial({ color: '#e0e0e0',  map: bbLeft, side: THREE.DoubleSide }),
+            bbRight: new THREE.MeshBasicMaterial({ color: '#e0e0e0',  map: bbRight, side: THREE.DoubleSide }),
             threshold: new THREE.MeshBasicMaterial({ color: '#e0e0e0', 
                 map: (() => {
                     const t = bbTexSrc.clone();
@@ -98,15 +98,14 @@ const RoomInterior = memo(({ label, showRoom, onReady, isExiting }) => {
                     t.wrapS = t.wrapT = THREE.RepeatWrapping;
                     t.repeat.set(corridorWidth / NATURAL_TILE_W, 1);
                     return t; })(),
-                roughness: 0.9,
-                metalness: 0,
+
                 side: THREE.DoubleSide
             }),
             // Room materials (keep flat for rooms that have their own content)
-            roomFloor: new THREE.MeshBasicMaterial({ color: '#e5e5e5', roughness: 0.95, side: THREE.DoubleSide }),
-            roomCeiling: new THREE.MeshBasicMaterial({ color: '#fafafa', roughness: 0.9, side: THREE.DoubleSide }),
-            roomWall: new THREE.MeshBasicMaterial({ color: '#f0f0f0', roughness: 0.9, side: THREE.DoubleSide }),
-            roomBackWall: new THREE.MeshBasicMaterial({ color: '#f5f5f5', roughness: 0.9, side: THREE.DoubleSide }),
+            roomFloor: new THREE.MeshBasicMaterial({ color: '#e5e5e5', side: THREE.DoubleSide }),
+            roomCeiling: new THREE.MeshBasicMaterial({ color: '#fafafa', side: THREE.DoubleSide }),
+            roomWall: new THREE.MeshBasicMaterial({ color: '#f0f0f0', side: THREE.DoubleSide }),
+            roomBackWall: new THREE.MeshBasicMaterial({ color: '#f5f5f5', side: THREE.DoubleSide }),
         };
     }, [floorTexSrc, wallTexSrc, ceilingTexSrc, bbTexSrc]);
 

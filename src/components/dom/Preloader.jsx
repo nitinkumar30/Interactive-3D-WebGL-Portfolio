@@ -125,6 +125,11 @@ const Preloader = ({ onComplete, ready }) => {
       cancelAnimationFrame(t);
       setRealProgress(100);
       setActive(false);
+      
+      const loadEnd = performance.now();
+      const loadDuration = ((loadEnd - loadStartTime.current) / 1000).toFixed(2);
+      console.info(`📦 Assets Loaded: ${loadDuration}s`);
+      
       origOnLoad?.();
     };
 
@@ -138,6 +143,9 @@ const Preloader = ({ onComplete, ready }) => {
   const { play } = useAudio();
   // Track audio handle to stop loop
   const pencilSoundRef = useRef(null);
+
+  // Performance Tracking
+  const loadStartTime = useRef(performance.now());
 
   // Use refs for animation targets
   const containerRef = useRef(null);
@@ -305,6 +313,14 @@ const Preloader = ({ onComplete, ready }) => {
     const tl = gsap.timeline({
       onComplete: () => {
         setIsDone(true);
+        
+        const exitEnd = performance.now();
+        const totalDuration = ((exitEnd - loadStartTime.current) / 1000).toFixed(2);
+        console.group("⏱️ Portfolio Loading Performance");
+        console.log(`- Start: %c${loadStartTime.current.toFixed(0)}ms`, "color: #888");
+        console.log(`- Total Duration: %c${totalDuration}s`, "color: #00ff00; font-weight: bold;");
+        console.groupEnd();
+        
         onComplete?.();
       }
     });

@@ -169,13 +169,13 @@ const StudioRoom = ({ showRoom, onReady, isExiting, isWarmup }) => {
                 let width, height, depth;
                 switch (platform.shape) {
                     case 'tv':
-                        width = 1.6; height = 1.2; depth = 1.0;
+                        width = 1.6; height = 1.187; depth = 1.0; // Legacy 1.348 ratio
                         break;
                     case 'monitor':
-                        width = 1.6; height = 1.0; depth = 0.15;
+                        width = 1.6; height = 1; depth = 0.15; // Legacy 1.835 ratio
                         break;
                     case 'phone':
-                        width = 0.6; height = 1.1; depth = 0.1;
+                        width = 0.6; height = 1.139; depth = 0.1; // Legacy 0.527 ratio
                         break;
                     default:
                         width = 1.4; height = 1.0; depth = 0.6;
@@ -641,9 +641,10 @@ const MonitorBlock = ({ item, meshRef, isSelected, onClick, disabled }) => {
     const paintedMaterials = useMemo(() => {
         if (!faceConfig) return null;
         return faceConfig.map(f =>
-            new THREE.MeshBasicMaterial({ color: '#e0e0e0', 
-                map: f.painted || f.sketch, // Use sketch as fallback if no painted version
-                roughness: 0.5 })
+            new THREE.MeshBasicMaterial({
+                color: '#e0e0e0',
+                map: f.painted || f.sketch // Use sketch as fallback if no painted version
+            })
         );
     }, [faceConfig]);
 
@@ -651,7 +652,7 @@ const MonitorBlock = ({ item, meshRef, isSelected, onClick, disabled }) => {
     const sketchMaterials = useMemo(() => {
         if (!faceConfig) return null;
         return faceConfig.map(f =>
-            f.painted ? null : new THREE.MeshBasicMaterial({ color: '#e0e0e0',  map: f.sketch, roughness: 0.5 })
+            f.painted ? null : new THREE.MeshBasicMaterial({ color: '#e0e0e0', map: f.sketch })
         );
     }, [faceConfig]);
 
@@ -702,7 +703,7 @@ const MonitorBlock = ({ item, meshRef, isSelected, onClick, disabled }) => {
             <group ref={meshRef} position={[item.x, item.baseY, item.z]} rotation={[0, item.rot, 0]}>
                 <mesh>
                     <boxGeometry args={[item.width, item.height, item.depth]} />
-                    <meshBasicMaterial color={item.platformConfig.color} roughness={0.4} metalness={0.1} />
+                    <meshBasicMaterial color={item.platformConfig.color} />
                 </mesh>
             </group>
         );
@@ -751,7 +752,7 @@ const MonitorBlock = ({ item, meshRef, isSelected, onClick, disabled }) => {
                                 ref={matRefs[i]}
                                 attach={`material-${i}`}
                                 map={face.sketch}
-                                roughness={0.5}
+
                                 uProgress={0.0}
                             />
                         );

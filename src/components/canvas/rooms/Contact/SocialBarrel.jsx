@@ -8,7 +8,7 @@ import '../../shaders/RevealMaterial';
 // Reusable Vector3 to avoid allocations in useFrame
 const _tempScale = new THREE.Vector3();
 
-const SocialBarrel = ({ position, rotation = [0, 0, 0], texturePath, label, onClick, scale = [2.3, 2.3] }) => {
+const SocialBarrel = ({ position, rotation = [0, 0, 0], texturePath, label, onClick, scale = [2.12, 2.3] }) => {
     const meshRef = useRef();
     const materialRef = useRef();
     const paintedRef = useRef();
