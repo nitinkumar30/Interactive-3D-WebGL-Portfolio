@@ -5,6 +5,8 @@
 
 // Entrance scene textures
 export const ENTRANCE_TEXTURES = [
+    // Core
+    '/textures/paper-texture.webp',
     // Doors
     '/textures/doors/frame_sketch.webp',
     '/textures/doors/door_left_sketch.webp',
@@ -40,7 +42,6 @@ export const CORRIDOR_TEXTURES = [
     '/textures/corridor/texturadoprogow.webp',
     '/textures/corridor/texturadrewnadonozekbiurka.webp',
     '/textures/corridor/ceiling_texture.webp',
-    '/textures/paper-texture.webp',
     '/textures/corridor/avatar_sketch.webp',
     // Double doors (end of corridor)
     '/textures/corridor/doors/frame_sketch.webp',
