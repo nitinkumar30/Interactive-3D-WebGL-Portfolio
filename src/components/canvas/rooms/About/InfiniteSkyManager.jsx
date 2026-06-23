@@ -351,7 +351,7 @@ const IntroMilestone = ({ z, scrollProgressRef }) => {
                 anchorY="middle"
                 font="/fonts/RubikScribble-Regular.ttf"
             >
-                TOMASZ SZMAJDA
+                NITIN S KUMAR
             </Text>
 
             {/* Subtitle - Brand (spreads right) */}
@@ -364,7 +364,7 @@ const IntroMilestone = ({ z, scrollProgressRef }) => {
                 anchorY="middle"
                 font="/fonts/CabinSketch-Regular.ttf"
             >
-                (ITOM)
+                (Senior Automation Engineer)
             </Text>
 
             {/* Avatar on cloud - floating + spreads up-left */}
@@ -416,12 +416,12 @@ const AWARDS_DATA = {
     featured: {
         id: 'award-featured',
         layout: 'certificate_grid',
-        title: 'Featured Projects Collection',
+        title: 'Professional Highlights',
         items: [
-            { label: 'Featured - Awwwards', date: 'May 2025', image: '/textures/about/FEATURED.webp', url: 'https://awwwards.com' },
-            { label: 'Featured - CSS Design Awards', date: 'June 2025', image: '/textures/about/FEATURED.webp', url: 'https://cssdesignawards.com' },
-            { label: 'Featured - The FWA', date: 'July 2025', image: '/textures/about/FEATURED.webp', url: 'https://thefwa.com' },
-            { label: 'Featured - Behance', date: 'August 2025', image: '/textures/about/FEATURED.webp', url: 'https://behance.net' },
+            { label: 'iAppreciate Q2 24', date: '2024', image: '/textures/about/FEATURED.webp', url: 'https://www.linkedin.com/in/nitin30kumar/' },
+            { label: 'Open Source Contributor', date: '160+ Stars', image: '/textures/about/FEATURED.webp', url: 'https://github.com/nitinkumar30' },
+            { label: 'Headed Internship Program', date: '2024', image: '/textures/about/FEATURED.webp', url: 'https://www.linkedin.com/in/nitin30kumar/' },
+            { label: 'GCP Automation Session', date: '2024', image: '/textures/about/FEATURED.webp', url: 'https://www.linkedin.com/in/nitin30kumar/' }
         ],
         platformConfig: {
             label: 'HONOR',
@@ -432,26 +432,31 @@ const AWARDS_DATA = {
     sotd: {
         id: 'award-sotd',
         layout: 'certificate_grid',
-        title: 'Site of the Day Awards',
+        title: 'Certifications',
         items: [
-            { label: 'SOTD - GSAP', date: 'February 13, 2026', image: '/textures/about/SOTDAYYOUNGMULTIGSAP.webp', url: 'https://www.linkedin.com/posts/greensock_site-of-the-day-young-multi-this-immersive-activity-7427567524940017664-zU2n?utm_source=share&utm_medium=member_desktop&rcm=ACoAAE3TV6UBqXoaJXUN5-1s3ij6SQJwTRAcbCM' },
-            { label: 'SOTD - CSS Winner', date: 'January 24, 2026', image: '/textures/about/SOTDAYYOUNGMULTICSSWINNER.webp', url: 'https://www.csswinner.com/details/young-multi-official-experience/19045' },
-            { label: 'SOTD - Orpetron', date: 'January 29, 2026', image: '/textures/about/SOTDAYYOUNGMULTIORPETRON.webp', url: 'https://orpetron.com/sites/young-multi/' },
-            { label: 'SOTD - Design Nominess', date: 'February 17, 2026', image: '/textures/about/SOTDAYYOUNGMULTIDESIGNNOMINESS.webp', url: 'https://www.designnominees.com/sites/young-multi' }
+            { label: 'Agile for Practitioners', date: 'TCS 2020', image: '/textures/about/FEATURED.webp', url: 'https://www.linkedin.com/in/nitin30kumar/' },
+            { label: 'Data Science with Python', date: 'Simplilearn 2021', image: '/textures/about/FEATURED.webp', url: 'https://www.linkedin.com/in/nitin30kumar/' },
+            { label: 'Automate the Boring Stuff', date: 'Udemy 2021', image: '/textures/about/FEATURED.webp', url: 'https://www.linkedin.com/in/nitin30kumar/' },
+            { label: 'Microsoft Technical Associate', date: 'Microsoft 2019', image: '/textures/about/FEATURED.webp', url: 'https://www.linkedin.com/in/nitin30kumar/' }
         ],
         platformConfig: {
-            label: 'AWARD',
+            label: 'CERTIFICATION',
             color: '#1a1a1a',
-            icon: '🏆'
+            icon: '📜'
         }
     },
     sotm: {
         id: 'award-sotm',
         layout: 'certificate_grid',
-        title: 'Site of the Month Awards',
-        items: [],
+        title: 'Open Source Impact',
+        items: [
+            { label: 'PyShrink', date: 'VS Code Extension', image: '/textures/about/FEATURED.webp', url: 'https://github.com/nitinkumar30/pyshrink-vscode' },
+            { label: 'PhoneTracer', date: 'OSINT Toolkit', image: '/textures/about/FEATURED.webp', url: 'https://github.com/nitinkumar30/phonetracer' },
+            { label: '227 Repositories', date: '160+ Stars', image: '/textures/about/FEATURED.webp', url: 'https://github.com/nitinkumar30' },
+            { label: 'Codegoda 2022', date: 'Programming Competition', image: '/textures/about/FEATURED.webp', url: 'https://github.com/nitinkumar30' }
+        ],
         platformConfig: {
-            label: 'AWARD',
+            label: 'OPEN SOURCE',
             color: '#1a1a1a',
             icon: '📅'
         }
@@ -459,10 +464,15 @@ const AWARDS_DATA = {
     soty: {
         id: 'award-soty',
         layout: 'certificate_grid',
-        title: 'Site of the Year Awards',
-        items: [],
+        title: 'Community Impact',
+        items: [
+            { label: 'Published PyShrink', date: 'Used by devs globally', image: '/textures/about/FEATURED.webp', url: 'https://github.com/nitinkumar30/pyshrink-vscode' },
+            { label: 'Published PhoneTracer', date: 'Used by devs globally', image: '/textures/about/FEATURED.webp', url: 'https://github.com/nitinkumar30/phonetracer' },
+            { label: 'Data Science Internship', date: 'Program Lead', image: '/textures/about/FEATURED.webp', url: 'https://www.linkedin.com/in/nitin30kumar/' },
+            { label: 'GCP Automation Sessions', date: 'Delivered to teams', image: '/textures/about/FEATURED.webp', url: 'https://www.linkedin.com/in/nitin30kumar/' }
+        ],
         platformConfig: {
-            label: 'PRESTIGE',
+            label: 'IMPACT',
             color: '#1a1a1a',
             icon: '👑'
         }
@@ -471,7 +481,7 @@ const AWARDS_DATA = {
 
 /**
  * AWARDS Milestone - Floating Cards
- * SOTY (center), SOTD, SOTM, Featured (behind)
+ * IMPACT (center), CERTIFICATIONS, OPEN SOURCE, Featured (behind)
  */
 const AwardsMilestone = ({ z, scrollProgressRef }) => {
     const { camera, viewport } = useThree();
@@ -622,7 +632,7 @@ const AwardsMilestone = ({ z, scrollProgressRef }) => {
                 AWARDS
             </Text>
 
-            {/* === SOTD (behind SOTY, rendered second) === */}
+            {/* === CERTIFICATIONS (behind IMPACT, rendered second) === */}
             <group ref={sotdRef} position={[0, 0.5, -0.5]}>
                 {/* Painted card (behind) - hidden until button hover */}
                 <mesh ref={sotdCardPaintedRef} position={[0, 0, -0.001]} visible={true}>
@@ -668,7 +678,7 @@ const AwardsMilestone = ({ z, scrollProgressRef }) => {
                     anchorY="middle"
                     font="/fonts/CabinSketch-Bold.ttf"
                 >
-                    SOTD
+                    CERTIFIED
                 </Text>
                 {/* AWARD COUNT */}
                 <Text
@@ -683,7 +693,7 @@ const AwardsMilestone = ({ z, scrollProgressRef }) => {
                 </Text>
             </group>
 
-            {/* === SOTM (behind SOTY, rendered third) === */}
+            {/* === OPEN SOURCE (behind IMPACT, rendered third) === */}
             <group ref={sotmRef} position={[0, 0.5, -0.2]}>
                 {/* Painted card (behind) - hidden until button hover */}
                 <mesh ref={sotmCardPaintedRef} position={[0, 0, -0.001]} visible={true}>
@@ -729,7 +739,7 @@ const AwardsMilestone = ({ z, scrollProgressRef }) => {
                     anchorY="middle"
                     font="/fonts/CabinSketch-Bold.ttf"
                 >
-                    SOTM
+                    OPEN SOURCE
                 </Text>
                 {/* AWARD COUNT */}
                 <Text
@@ -740,11 +750,11 @@ const AwardsMilestone = ({ z, scrollProgressRef }) => {
                     anchorY="middle"
                     font="/fonts/CabinSketch-Bold.ttf"
                 >
-                    0
+                    4
                 </Text>
             </group>
 
-            {/* === SOTY (front, center, rendered LAST = always on top) === */}
+            {/* === IMPACT (front, center, rendered LAST = always on top) === */}
             <group ref={sotyRef} position={[0, 0.5, 0]}>
                 {/* Painted card (behind) - hidden until button hover */}
                 <mesh ref={sotyCardPaintedRef} position={[0, 0, -0.001]} visible={true}>
@@ -789,7 +799,7 @@ const AwardsMilestone = ({ z, scrollProgressRef }) => {
                     anchorY="middle"
                     font="/fonts/CabinSketch-Bold.ttf"
                 >
-                    SOTY
+                    IMPACT
                 </Text>
                 {/* AWARD COUNT */}
                 <Text
@@ -800,7 +810,7 @@ const AwardsMilestone = ({ z, scrollProgressRef }) => {
                     anchorY="middle"
                     font="/fonts/CabinSketch-Bold.ttf"
                 >
-                    0
+                    4
                 </Text>
             </group>
         </group>

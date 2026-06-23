@@ -20,11 +20,11 @@ const ScreenReaderOverlay = () => {
 
             {/* Main accessible navigation */}
             <nav id="sr-main-nav" className="sr-only" aria-label="Portfolio rooms">
-                <h1>ITom — Creative Developer Portfolio</h1>
+                <h1>Nitin S Kumar — Senior Automation Engineer Portfolio</h1>
                 <h2>Portfolio Navigation</h2>
 
                 {!hasEntered && (
-                    <p>Welcome to ITom's interactive 3D portfolio. Click or press Enter on the doors to enter.</p>
+                    <p>Welcome to Nitin's interactive 3D portfolio. Click or press Enter on the doors to enter.</p>
                 )}
 
                 {hasEntered && !isInRoom && (
@@ -33,7 +33,7 @@ const ScreenReaderOverlay = () => {
                         <ul>
                             <li>
                                 <button onClick={() => teleportTo('about')} type="button">
-                                    About — My story, skills, and journey
+                                    About — My story, skills, and career journey
                                 </button>
                             </li>
                             <li>
@@ -48,7 +48,7 @@ const ScreenReaderOverlay = () => {
                             </li>
                             <li>
                                 <button onClick={() => teleportTo('studio')} type="button">
-                                    The Studio — Technologies and experience
+                                    The Studio — Content, blogs, and media
                                 </button>
                             </li>
                         </ul>

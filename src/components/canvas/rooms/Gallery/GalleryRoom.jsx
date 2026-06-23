@@ -35,40 +35,40 @@ export const GALLERY_INTERACTION_AUDIO_SETTINGS = {
 // Define the unique projects and their textures
 const UNIQUE_PROJECTS = [
     {
-        id: 'monetune',
-        title: 'MONETUNE',
+        id: 'edumail',
+        title: 'EDU MAIL GEN',
         front: '/textures/gallery/monetuneprzod.webp',
         painted: '/textures/gallery/monetuneprzod_painted.webp',
-        url: 'https://monetune.pl',
-        description: 'MoneTune is a step-by-step blueprint that teaches beginners how to generate passive income using AI-created music. Without any musical skills, you will learn how to easily produce professional tracks, publish them on platforms like Spotify, and monetize your digital assets.',
-        techStack: ['/textures/gallery/wordpresslogo.webp', '/textures/gallery/elementorlogo.webp', '/textures/gallery/phplogo.webp', '/textures/gallery/csslogo.webp']
+        url: 'https://github.com/nitinkumar30/edu-mail-auto-generator',
+        description: 'Auto Edu Mail Generator automates bulk creation of educational institute email accounts using Python and Selenium. With 119 GitHub stars, it features modular architecture, robust error handling, and batch processing capabilities.',
+        techStack: ['/textures/gallery/phplogo.webp', '/textures/gallery/htmllogo.webp', '/textures/gallery/jslogo.webp', '/textures/gallery/csslogo.webp']
     },
     {
-        id: 'timber',
-        title: 'TIMBERKITTY',
+        id: 'naukri',
+        title: 'NAUKRI UPLOADER',
         front: '/textures/gallery/timberkittyprzod.webp',
         painted: '/textures/gallery/timberkittyprzod_painted.webp',
-        url: 'https://timberkitty.netlify.app',
-        description: 'TimberKitty is an addictive, free-to-play browser arcade game built in pure JavaScript. Players control a lumberjack cat to chop wood, save birds, complete daily missions, and compete on global leaderboards.',
-        techStack: ['/textures/gallery/jslogo.webp', '/textures/gallery/htmllogo.webp', '/textures/gallery/csslogo.webp', '/textures/gallery/firebaselogo.webp']
+        url: 'https://github.com/nitinkumar30/naukri-auto-resume-uploader',
+        description: 'Naukri Auto Resume Uploader automates resume uploads on job portals using Python and Selenium. Features headless browser automation, scheduled execution, intelligent form handling, and cross-platform support.',
+        techStack: ['/textures/gallery/jslogo.webp', '/textures/gallery/htmllogo.webp', '/textures/gallery/csslogo.webp', '/textures/gallery/reactlogo.webp']
     },
     {
-        id: 'young',
-        title: 'YOUNG MULTI',
+        id: 'n8n',
+        title: 'N8N PROJECTS',
         front: '/textures/gallery/youngmultiprzod.webp',
         painted: '/textures/gallery/youngmultiprzod_painted.webp',
-        url: 'https://young-multi-strona.netlify.app',
-        description: 'A sleek, modern concept website dedicated to the Polish rapper and creator Young Multi. It serves as a promotional landing page designed to highlight his personal brand, music, and online presence.',
-        techStack: ['/textures/gallery/reactlogo.webp', '/textures/gallery/tailwindlogo.webp', '/textures/gallery/htmllogo.webp', '/textures/gallery/netlifylogo.webp']
+        url: 'https://github.com/nitinkumar30/n8n-projects',
+        description: 'A collection of workflow automation projects built with n8n, featuring API integrations, service orchestration, and automated pipelines. Demonstrates TypeScript proficiency and modern workflow automation patterns.',
+        techStack: ['/textures/gallery/jslogo.webp', '/textures/gallery/reactlogo.webp', '/textures/gallery/netlifylogo.webp', '/textures/gallery/tailwindlogo.webp']
     },
     {
-        id: 'bio',
-        title: 'BIO',
+        id: 'pyshrink',
+        title: 'PY SHRINK',
         front: '/textures/gallery/bioprzod.webp',
         painted: '/textures/gallery/bioprzod_painted.webp',
-        url: 'https://tomkingbio.netlify.app',
-        description: 'A fast, modern personal bio page serving as a central hub for my digital footprint. It showcases my latest coding projects, web development services, YouTube videos, and recommended music artists.',
-        techStack: ['/textures/gallery/htmllogo.webp', '/textures/gallery/csslogo.webp', '/textures/gallery/jslogo.webp', '/textures/gallery/netlifylogo.webp']
+        url: 'https://github.com/nitinkumar30/pyshrink-vscode',
+        description: 'PyShrink is a Python project sanitizer and packager with POM-style framework architecture. Available as a VS Code extension, it streamlines Python project packaging and dependency management for developers.',
+        techStack: ['/textures/gallery/htmllogo.webp', '/textures/gallery/jslogo.webp', '/textures/gallery/csslogo.webp', '/textures/gallery/netlifylogo.webp']
     },
 ];
 

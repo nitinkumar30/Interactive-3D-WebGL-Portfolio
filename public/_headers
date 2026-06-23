@@ -1,33 +1,33 @@
-https://portfolio-itom.pages.dev/*
+https://portfolio-nitin.pages.dev/*
   X-Robots-Tag: noindex
 
-https://itomdev.com/*
+https://ni3kr.vercel.app/*
   X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=()
 
 # Cache static assets for 1 year (Performance & SEO Server Score)
-https://itomdev.com/*.js
+https://ni3kr.vercel.app/*.js
   Cache-Control: public, max-age=31536000, immutable
 
-https://itomdev.com/*.css
+https://ni3kr.vercel.app/*.css
   Cache-Control: public, max-age=31536000, immutable
 
-https://itomdev.com/*.webp
+https://ni3kr.vercel.app/*.webp
   Cache-Control: public, max-age=31536000, immutable
 
-https://itomdev.com/*.png
+https://ni3kr.vercel.app/*.png
   Cache-Control: public, max-age=31536000, immutable
 
-https://itomdev.com/*.ktx2
+https://ni3kr.vercel.app/*.ktx2
   Cache-Control: public, max-age=31536000, immutable
 
-https://itomdev.com/*.glb
+https://ni3kr.vercel.app/*.glb
   Cache-Control: public, max-age=31536000, immutable
 
-https://itomdev.com/*.mp3
+https://ni3kr.vercel.app/*.mp3
   Cache-Control: public, max-age=31536000, immutable
 
-https://itomdev.com/fonts/*
+https://ni3kr.vercel.app/fonts/*
   Cache-Control: public, max-age=31536000, immutable

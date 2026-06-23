@@ -43,7 +43,7 @@ const Doodles = () => {
                 floatAmount={0.04}
             />
 
-            {/* Paper Ball - BIGGER, lower left near creative developer */}
+            {/* Paper Ball - BIGGER, lower left near automation engineer */}
             <SketchElement
                 texture={textures.paperBall}
                 position={[-0.9, -0.7, 0.4]}
@@ -63,7 +63,7 @@ const Doodles = () => {
                 floatAmount={0.03}
             />
 
-            {/* Pencil - BIGGER, under creative developer */}
+            {/* Pencil - BIGGER, under automation engineer */}
             <SketchElement
                 texture={textures.pencil}
                 position={[0.7, -0.8, 0.5]}

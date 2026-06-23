@@ -1,4 +1,4 @@
-# 🎨 ITom Dev | Interactive 3D WebGL Portfolio
+# Nitin Kumar | Interactive 3D WebGL Portfolio
 
 <div align="center">
   <img src="https://img.shields.io/badge/React-19-blue?style=for-the-badge&logo=react" alt="React" />
@@ -10,7 +10,7 @@
 
 <br/>
 
-Welcome to the open-source repository of **Tomasz "ITom" Szmajda's** interactive 3D Web Developer portfolio. This project pushes the limits of modern web technologies by blending spatial WebGL computing, complex React ecosystems, and highly optimized frontend engineering.
+Interactive 3D portfolio by **Nitin S Kumar**. Forked from [ITomPoland/portfolio-itom](https://github.com/ITomPoland/portfolio-itom), customized with personal projects, achievements, and content.
 
 > [!NOTE]
 > Ensure hardware acceleration is enabled in your browser settings to experience the smooth 60 FPS high-tier rendering of this application.
@@ -56,8 +56,8 @@ To run this application natively on your local machine:
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/ITomPoland/portfolio-itom.git
-   cd portfolio-itom
+    git clone https://github.com/nitinkumar30/portfolio-nitin.git
+    cd portfolio-nitin
    ```
 
 2. **Install dependencies:**
@@ -76,20 +76,19 @@ To run this application natively on your local machine:
 
 ## 🤝 Contributing & Feedback
 
-All PRs improving the shader physics, 3D math logic, or component memoization runtimes are welcome. Please refer to our new `.github` Issue and Pull Request templates when submitting!
+All PRs improving the shader physics, 3D math logic, or component memoization runtimes are welcome.
 
 1. Fork the Project
 2. Create your Feature Branch (`git checkout -b feature/AmazingRoom`)
-
-
-## License
-
-The code in this repository is licensed under the [MIT License](LICENSE). 
-**Note:** All personal assets, 3D textures, images, and copywriting are copyright of Tomasz Szmajda and may not be reused or reproduced without explicit permission.
-3. Commit your Changes (`git commit -m 'feat: Added realistic liquid simulation to Contact Room'`)
+3. Commit your Changes (`git commit -m 'feat: Added amazing feature'`)
 4. Push to the Branch (`git push origin feature/AmazingRoom`)
 5. Open a Pull Request
 
+## License
+
+The code in this repository is licensed under the [MIT License](LICENSE).
+Original 3D assets, textures, and design are copyright of Tomasz Szmajda (ITomDev). Forked and customized with permission under the MIT license.
+
 ---
 
-*Designed and Developed by [Tomasz Szmajda (ITom Dev)](https://itomdev.com).*
+*Original design by [Tomasz Szmajda (ITom Dev)](https://itomdev.com). Forked and customized by [Nitin Kumar](https://ni3kr.vercel.app).*
