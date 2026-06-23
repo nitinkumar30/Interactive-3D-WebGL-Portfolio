@@ -16,7 +16,7 @@
     "@react-three/postprocessing": "^3.0.4",
     "@types/three": "^0.182.0",
     "gsap": "^3.14.2",
-    "jimp": "^1.6.0",
+    "jimp": "^1.6.1",
     "posthog-js": "^1.360.0",
     "r3f-perf": "^7.2.3",
     "react": "^19.2.0",
